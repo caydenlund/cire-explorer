@@ -24,6 +24,7 @@
 
 export {BloatyTool} from './bloaty-tool.js';
 export {BrontoRefactorTool} from './bronto-refactor-tool.js';
+export {CireTool} from './cire-tool.js';
 export {ClangFormatTool} from './clang-format-tool.js';
 export {ClangQueryTool} from './clang-query-tool.js';
 export {ClangTidyTool} from './clang-tidy-tool.js';
