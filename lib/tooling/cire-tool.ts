@@ -23,13 +23,20 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
+import {ParsedAsmResultLine} from '../../types/asmresult/asmresult.interfaces.js';
 import {CompilationInfo} from '../../types/compilation/compilation.interfaces.js';
-import * as utils from '../utils.js';
+import {UnprocessedExecResult} from '../../types/execution/execution.interfaces.js';
+import {ResultLine} from '../../types/resultline/resultline.interfaces.js';
+import {ToolResult} from '../../types/tool.interfaces.js';
 
 import {BaseTool} from './base-tool.js';
 
 export class CireTool extends BaseTool {
+    private originalInputFilename?: string;
+    private irOutputAsmLines?: ParsedAsmResultLine[];
+
     static get key() {
         return 'cire-tool';
     }
@@ -49,10 +56,144 @@ export class CireTool extends BaseTool {
             return this.createErrorResponse('<IR output does not appear to be valid LLVM IR>');
         }
 
+        // Store the original input filename and LLVM IR data for source mapping
+        this.originalInputFilename = compilationInfo.inputFilename;
+        this.irOutputAsmLines = compilationInfo.irOutput.asm;
+
         // Write LLVM IR to a temporary file for CIRE to process
         const llvmIRFilename = compilationInfo.outputFilename + '.ll';
         await fs.writeFile(llvmIRFilename, llvmIRContent);
         
         return super.runTool(compilationInfo, llvmIRFilename, args);
+    }
+
+    private parseCireOutput(lines: string, inputFilename?: string): ResultLine[] {
+        const result: ResultLine[] = [];
+        const instructionToSourceMap = this.createInstructionToSourceMap();
+        
+        lines.split('\n').forEach(line => {
+            const lineObj: ResultLine = {text: line};
+            
+            // Look for CIRE instruction lines like: "add7 (fadd): error contribution: 8.426e-01 (35.7%) |   %add7 = fadd double %0, %div6"
+            const cireMatch = line.match(/^(\w+)\s*\([^)]+\):[^|]*\|\s*(.+)$/);
+            if (cireMatch) {
+                const llvmInstruction = cireMatch[2].trim();
+                let sourceInfo = instructionToSourceMap.get(llvmInstruction);
+                
+                // If exact match fails, try partial matches
+                if (!sourceInfo) {
+                    // Try matching just the instruction part without debug info
+                    const cleanInstr = llvmInstruction.replace(/,\s*!dbg.*$/, '').trim();
+                    sourceInfo = instructionToSourceMap.get(cleanInstr);
+                }
+                
+                if (!sourceInfo) {
+                    // Try matching the variable name (e.g., "%add7")
+                    const varMatch = llvmInstruction.match(/^\s*(%\w+)/);
+                    if (varMatch) {
+                        sourceInfo = instructionToSourceMap.get(varMatch[1]);
+                    }
+                }
+                
+                if (sourceInfo) {
+                    lineObj.tag = {
+                        line: sourceInfo.line,
+                        column: sourceInfo.column || 1,
+                        text: line,
+                        severity: 1, // Info level for CIRE analysis results
+                        file: inputFilename ? path.basename(inputFilename) : undefined,
+                    };
+                }
+            }
+            
+            result.push(lineObj);
+        });
+        
+        return result;
+    }
+
+    private createInstructionToSourceMap(): Map<string, {line: number; column?: number}> {
+        const instructionMap = new Map<string, {line: number; column?: number}>();
+        
+        if (!this.irOutputAsmLines) return instructionMap;
+        
+        // First, build a map of debug metadata to line numbers
+        const debugMetadataMap = this.parseDebugMetadata();
+        
+        // Process each LLVM IR line to extract instruction-to-source mappings
+        this.irOutputAsmLines.forEach(parsedLine => {
+            const lineText = parsedLine.text.trim();
+            
+            // Look for instructions with debug info: %var = operation ..., !dbg !123
+            const instrWithDebugMatch = lineText.match(/^\s*(%?\w+\s*=\s*[^,]+(?:,[^,!]*)*),\s*!dbg\s*!(\d+)/);
+            if (instrWithDebugMatch) {
+                const instruction = instrWithDebugMatch[1].trim();
+                const debugRef = instrWithDebugMatch[2];
+                const sourceLineNum = debugMetadataMap.get(debugRef);
+                
+                if (sourceLineNum) {
+                    // Store multiple forms of the instruction for matching
+                    instructionMap.set(instruction, {line: sourceLineNum});
+                    
+                    // Also store the full line without debug info
+                    const fullInstruction = lineText.replace(/,\s*!dbg\s*!\d+/, '');
+                    instructionMap.set(fullInstruction, {line: sourceLineNum});
+                    
+                    // Extract variable name if present (e.g., "%add7")
+                    const varMatch = instruction.match(/^\s*(%\w+)/);
+                    if (varMatch) {
+                        instructionMap.set(varMatch[1], {line: sourceLineNum});
+                    }
+                }
+            }
+            
+            // Fallback: use existing source mapping from parsed line if available
+            if (parsedLine.source?.line && !instrWithDebugMatch) {
+                instructionMap.set(lineText, {
+                    line: parsedLine.source.line,
+                    column: parsedLine.source.column
+                });
+            }
+        });
+        
+        return instructionMap;
+    }
+
+    private parseDebugMetadata(): Map<string, number> {
+        const debugMap = new Map<string, number>();
+        
+        if (!this.irOutputAsmLines) return debugMap;
+        
+        // Look for debug metadata definitions like: !21 = !DILocation(line: 5, ...)
+        this.irOutputAsmLines.forEach(parsedLine => {
+            const lineText = parsedLine.text.trim();
+            const diLocationMatch = lineText.match(/^!(\d+)\s*=\s*!DILocation\(line:\s*(\d+)/);
+            if (diLocationMatch) {
+                const debugId = diLocationMatch[1];
+                const lineNumber = parseInt(diLocationMatch[2], 10);
+                debugMap.set(debugId, lineNumber);
+            }
+        });
+        
+        return debugMap;
+    }
+
+    protected override parseOutput(lines: string, inputFilename?: string, pathPrefix?: string): ResultLine[] {
+        return this.parseCireOutput(lines, inputFilename);
+    }
+
+    override convertResult(result: UnprocessedExecResult, inputFilepath?: string, exeDir?: string): ToolResult {
+        // Use the original source file for parsing, not the temporary LLVM IR file
+        const sourceFilepath = this.originalInputFilename || inputFilepath;
+        const transformedFilepath = sourceFilepath ? result.filenameTransform(sourceFilepath) : undefined;
+        
+        return {
+            id: this.tool.id,
+            name: this.tool.name,
+            code: result.code,
+            languageId: this.tool.languageId,
+            stderr: this.parseOutput(result.stderr, transformedFilepath, exeDir),
+            stdout: this.parseOutput(result.stdout, transformedFilepath, exeDir),
+        };
     }
 }
