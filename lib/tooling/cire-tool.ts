@@ -35,32 +35,23 @@ export class CireTool extends BaseTool {
     }
 
     override async runTool(compilationInfo: CompilationInfo, _inputFilepath?: string, args?: string[]) {
-        // CIRE requires LLVM IR, not binary or regular assembly
-        if (compilationInfo.filters.binary || compilationInfo.filters.binaryObject) {
-            return this.createErrorResponse('<CIRE requires LLVM IR output - use -S -emit-llvm compilation flags>');
+        // CIRE requires LLVM IR output from the dedicated LLVM IR pane
+        if (!compilationInfo.irOutput || !compilationInfo.irOutput.asm) {
+            return this.createErrorResponse('<CIRE requires LLVM IR output. Please add "LLVM IR" from the "Add new..." dropdown>');
         }
 
-        // Check if the user has enabled LLVM IR generation via compiler flags
-        const hasEmitLLVM = compilationInfo.options.some(opt => opt.includes('-emit-llvm'));
-        const hasAssemblyFlag = compilationInfo.options.some(opt => opt === '-S');
+        // Extract LLVM IR content from the IR output
+        const llvmIRLines = compilationInfo.irOutput.asm.map(line => line.text);
+        const llvmIRContent = llvmIRLines.join('\n');
         
-        if (!hasEmitLLVM || !hasAssemblyFlag) {
-            return this.createErrorResponse('<CIRE requires LLVM IR generation. Please add "-S -emit-llvm" to compiler arguments>');
+        // Basic validation that this is LLVM IR
+        if (!llvmIRContent.includes('target triple') && !llvmIRContent.includes('define ') && !llvmIRContent.includes('@')) {
+            return this.createErrorResponse('<IR output does not appear to be valid LLVM IR>');
         }
 
-        if (!compilationInfo.asm) {
-            return this.createErrorResponse('<no LLVM IR output available - ensure -S -emit-llvm flags are set>');
-        }
-
-        const asmString = utils.normalizeAsmToString(compilationInfo.asm);
-        
-        // Validate that this is actually LLVM IR content
-        if (!asmString.includes('target triple') && !asmString.includes('define ') && !asmString.includes('@')) {
-            return this.createErrorResponse('<Output does not appear to be LLVM IR. Please use "-S -emit-llvm" compilation flags>');
-        }
-
+        // Write LLVM IR to a temporary file for CIRE to process
         const llvmIRFilename = compilationInfo.outputFilename + '.ll';
-        await fs.writeFile(llvmIRFilename, asmString);
+        await fs.writeFile(llvmIRFilename, llvmIRContent);
         
         return super.runTool(compilationInfo, llvmIRFilename, args);
     }
