@@ -96,12 +96,20 @@ export class CireTool extends BaseTool {
                 }
                 
                 if (sourceInfo) {
+                    // Add both tag (for clickability) and source (for mouseover highlighting)
                     lineObj.tag = {
                         line: sourceInfo.line,
                         column: sourceInfo.column || 1,
                         text: line,
                         severity: 1, // Info level for CIRE analysis results
                         file: inputFilename ? path.basename(inputFilename) : undefined,
+                    };
+                    
+                    // Add source information for mouseover highlighting
+                    lineObj.source = {
+                        file: inputFilename ? path.basename(inputFilename) : null,
+                        line: sourceInfo.line,
+                        mainsource: true,
                     };
                 }
             }
