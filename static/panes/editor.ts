@@ -379,6 +379,7 @@ export class Editor extends MonacoPane<monaco.editor.IStandaloneCodeEditor, Edit
             if (this.mouseMoveThrottledFunction) this.mouseMoveThrottledFunction(e);
         });
 
+
         if (window.compilerExplorerOptions.mobileViewer) {
             // workaround for issue with contextmenu not going away when tapping somewhere else on the screen
             this.editor.onDidChangeCursorSelection(() => {
@@ -1809,9 +1810,10 @@ export class Editor extends MonacoPane<monaco.editor.IStandaloneCodeEditor, Edit
     }
 
     updateDecorations(): void {
+        const newDecorations = _.compact(_.flatten(_.values(this.decorations)));
         this.prevDecorations = this.editor.deltaDecorations(
             this.prevDecorations,
-            _.compact(_.flatten(_.values(this.decorations))),
+            newDecorations,
         );
     }
 

@@ -475,9 +475,6 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
                             if (obj.source && obj.source.line) {
                                 lineNum = obj.source.line;
                                 column = obj.source.column || 0;
-                                console.log(`Tool Debug: Found source mapping for "${obj.text.substring(0, 50)}" -> line ${lineNum}`);
-                            } else {
-                                console.log(`Tool Debug: No source mapping for "${obj.text.substring(0, 50)}"`);
                             }
                             
                             this.add(
@@ -545,28 +542,22 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
                     return false;
                 })
                 .on('mouseover', () => {
-                    console.log(`Tool Debug: Mouseover on line ${lineNum}, hoverShowSource=${this.settings.hoverShowSource}`);
                     // Only highlight if the hoverShowSource setting is enabled
                     if (this.settings.hoverShowSource === true) {
-                        // Emit both editor and panes link events for cross-pane highlighting
-                        const col = column || 0;
-                        console.log(`Tool Debug: Emitting highlight events for line ${lineNum}, col ${col}`);
-                        this.eventHub.emit('editorLinkLine', editorId, lineNum, col, col, false);
+                        // Use editorSetDecoration for mouseover (like click but without reveal)
+                        // This avoids column decoration issues that editorLinkLine can cause
+                        this.eventHub.emit('editorSetDecoration', editorId, lineNum, false, column);
                         this.eventHub.emit(
                             'panesLinkLine',
                             this.compilerInfo.compilerId,
                             lineNum,
-                            col,
-                            col,
+                            column || -1,
+                            column || -1,
                             false,
                             this.getPaneName(),
                             editorId,
                         );
                     }
-                })
-                .on('mouseout', () => {
-                    // Clear highlighting when mouse leaves
-                    this.clearLinkedLines();
                 })
                 .appendTo(elem);
         } else {
@@ -599,22 +590,6 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
         this.settings = {...newSettings};
     }
 
-    clearLinkedLines(): void {
-        // Clear highlighting in all other panes by emitting events with no line numbers
-        if (this.compilerInfo.editorId) {
-            this.eventHub.emit('editorLinkLine', this.compilerInfo.editorId, -1, -1, -1, false);
-            this.eventHub.emit(
-                'panesLinkLine',
-                this.compilerInfo.compilerId,
-                -1,
-                -1,
-                -1,
-                false,
-                this.getPaneName(),
-                this.compilerInfo.editorId,
-            );
-        }
-    }
 
     override close() {
         this.eventHub.emit('toolClosed', this.compilerInfo.compilerId, this.getCurrentState());
