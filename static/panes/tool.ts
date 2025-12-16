@@ -466,11 +466,25 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
                         if (obj.text === '') {
                             this.add('<br/>');
                         } else {
+                            // Check for source mapping information for mouseover highlighting
+                            let lineNum = obj.tag ? obj.tag.line : obj.line;
+                            let column = obj.tag ? obj.tag.column : 0;
+                            let flow = obj.tag ? obj.tag.flow : null;
+                            
+                            // If obj.source exists, use it for mouseover highlighting even if obj.tag exists for clicking
+                            if (obj.source && obj.source.line) {
+                                lineNum = obj.source.line;
+                                column = obj.source.column || 0;
+                                console.log(`Tool Debug: Found source mapping for "${obj.text.substring(0, 50)}" -> line ${lineNum}`);
+                            } else {
+                                console.log(`Tool Debug: No source mapping for "${obj.text.substring(0, 50)}"`);
+                            }
+                            
                             this.add(
                                 this.clickableUrls(this.normalAnsiToHtml.toHtml(obj.text)),
-                                obj.tag ? obj.tag.line : obj.line,
-                                obj.tag ? obj.tag.column : 0,
-                                obj.tag ? obj.tag.flow : null,
+                                lineNum,
+                                column,
+                                flow,
                             );
                         }
                     }
@@ -530,7 +544,30 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
                     e.preventDefault();
                     return false;
                 })
-                .on('mouseover', () => this.eventHub.emit('editorSetDecoration', editorId, lineNum, false, column))
+                .on('mouseover', () => {
+                    console.log(`Tool Debug: Mouseover on line ${lineNum}, hoverShowSource=${this.settings.hoverShowSource}`);
+                    // Only highlight if the hoverShowSource setting is enabled
+                    if (this.settings.hoverShowSource === true) {
+                        // Emit both editor and panes link events for cross-pane highlighting
+                        const col = column || 0;
+                        console.log(`Tool Debug: Emitting highlight events for line ${lineNum}, col ${col}`);
+                        this.eventHub.emit('editorLinkLine', editorId, lineNum, col, col, false);
+                        this.eventHub.emit(
+                            'panesLinkLine',
+                            this.compilerInfo.compilerId,
+                            lineNum,
+                            col,
+                            col,
+                            false,
+                            this.getPaneName(),
+                            editorId,
+                        );
+                    }
+                })
+                .on('mouseout', () => {
+                    // Clear highlighting when mouse leaves
+                    this.clearLinkedLines();
+                })
                 .appendTo(elem);
         } else {
             elem.html(msg);
@@ -556,6 +593,27 @@ export class Tool extends MonacoPane<monaco.editor.IStandaloneCodeEditor, ToolSt
 
     override getDefaultPaneName() {
         return this.toolName;
+    }
+
+    override onSettingsChange(newSettings: any): void {
+        this.settings = {...newSettings};
+    }
+
+    clearLinkedLines(): void {
+        // Clear highlighting in all other panes by emitting events with no line numbers
+        if (this.compilerInfo.editorId) {
+            this.eventHub.emit('editorLinkLine', this.compilerInfo.editorId, -1, -1, -1, false);
+            this.eventHub.emit(
+                'panesLinkLine',
+                this.compilerInfo.compilerId,
+                -1,
+                -1,
+                -1,
+                false,
+                this.getPaneName(),
+                this.compilerInfo.editorId,
+            );
+        }
     }
 
     override close() {

@@ -71,6 +71,9 @@ export class CireTool extends BaseTool {
         const result: ResultLine[] = [];
         const instructionToSourceMap = this.createInstructionToSourceMap();
         
+        // Debug: log the instruction map size
+        console.log(`CIRE Debug: Created instruction map with ${instructionToSourceMap.size} entries`);
+        
         lines.split('\n').forEach(line => {
             const lineObj: ResultLine = {text: line};
             
@@ -96,6 +99,9 @@ export class CireTool extends BaseTool {
                 }
                 
                 if (sourceInfo) {
+                    // Debug: log successful mapping
+                    console.log(`CIRE Debug: Mapped "${llvmInstruction}" to line ${sourceInfo.line}`);
+                    
                     // Add both tag (for clickability) and source (for mouseover highlighting)
                     lineObj.tag = {
                         line: sourceInfo.line,
@@ -111,6 +117,9 @@ export class CireTool extends BaseTool {
                         line: sourceInfo.line,
                         mainsource: true,
                     };
+                } else {
+                    // Debug: log when no mapping is found
+                    console.log(`CIRE Debug: No mapping found for "${llvmInstruction}"`);
                 }
             }
             
