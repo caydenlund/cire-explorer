@@ -7,8 +7,8 @@ CIRE Explorer is a specialized version of Compiler Explorer configured to work w
 ### Prerequisites
 
 - Node.js 20 or higher
-- CIRE binary built and available
 - Clang/LLVM compiler
+- `curl` (for automatic CIRE setup)
 
 ### Setup
 
@@ -19,30 +19,41 @@ CIRE Explorer is a specialized version of Compiler Explorer configured to work w
    npm install
    ```
 
-2. **Configure CIRE location:**
-   Create `etc/config/c.local.properties` with your CIRE configuration:
-   ```properties
-   # Point to your clang compiler
-   compiler.cclangdefault.exe=/path/to/your/clang
-
-   # Configure CIRE tool
-   tools=cire
-   tools.cire.name=CIRE
-   tools.cire.exe=/path/to/your/CIRE/build/bin/CIRE_LLVM
-   tools.cire.type=postcompilation
-   tools.cire.class=cire-tool
-   tools.cire.options=--stdout
+2. **Bootstrap CIRE (recommended):**
+   The easiest way to get started is to use the bootstrap script, which automatically downloads the latest CIRE binary:
+   ```bash
+   ./etc/scripts/bootstrap-cire.sh
    ```
 
-   Replace `/path/to/your/clang` with your clang installation path and `/path/to/your/CIRE/build/bin/CIRE_LLVM` with your CIRE binary path.
+   This script will:
+   - Download the latest `CIRE_LLVM` binary from [GitHub releases](https://github.com/caydenlund/CIRE/releases)
+   - Save it to `tools/cire/CIRE_LLVM`
+   - Configure `etc/config/c.local.properties` with the correct path
 
-3. **Build and run:**
+3. **Configure your compiler (optional):**
+   If needed, you can customize your local configuration in `etc/config/c.local.properties`:
+   ```properties
+   # Point to your clang compiler (optional, defaults to system clang)
+   compiler.cclangdefault.exe=/path/to/your/clang
+   ```
+
+4. **Build and run:**
    ```bash
    npm start
    ```
 
-4. **Access the interface:**
+5. **Access the interface:**
    Open [http://localhost:10240](http://localhost:10240) in your browser.
+
+### Manual CIRE Setup
+
+If you prefer to build CIRE from source or use a custom binary:
+
+1. Build or obtain the `CIRE_LLVM` binary
+2. Create `etc/config/c.local.properties` with:
+   ```properties
+   tools.cire.exe=/path/to/your/CIRE_LLVM
+   ```
 
 ### Troubleshooting
 
