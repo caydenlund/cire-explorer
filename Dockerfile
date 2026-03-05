@@ -49,9 +49,12 @@ LABEL maintainer="CIRE Team"
 LABEL description="CIRE Explorer - Interactive Compiler Explorer with CIRE error analysis and LLVM"
 LABEL version="1.0"
 
+ENTRYPOINT []
+
 # Install Node.js runtime and curl (for health checks)
 RUN apt-get update && apt-get install -y \
     curl \
+    binutils \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
