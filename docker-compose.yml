@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  cire-explorer:
+    build:
+      context: ..  # Parent directory containing CIRE/, cire-explorer/, and llvm-upstream/
+      dockerfile: cire-explorer/Dockerfile
+    image: cire-explorer:latest
+    container_name: cire-explorer
+    ports:
+      - "10240:10240"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Optional: Mount workspace for easy file access
+      - ./workspace:/workspace
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10240/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: cire-network

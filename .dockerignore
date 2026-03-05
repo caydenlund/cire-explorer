@@ -1,0 +1,60 @@
+# Node modules (will be installed in container)
+node_modules/
+npm-debug.log*
+
+# Build outputs
+out/
+dist/
+*.js.map
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+cypress/videos/
+cypress/screenshots/
+coverage/
+.nyc_output/
+
+# Local configuration
+*.local.properties
+etc/config/*.local.properties
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Examples and test data
+examples/
+test/fixtures/
+
+# Large development databases
+*.sqlite
+*.db

@@ -62,3 +62,40 @@ If you prefer to build CIRE from source or use a custom binary:
 **Compilation errors**: Verify your clang path in `compiler.cclangdefault.exe` is correct.
 
 **Build issues**: Ensure Node.js 20+ is installed and run `npm install` to update dependencies.
+
+## Docker Setup
+
+The easiest way to run CIRE Explorer with all dependencies included is using Docker.
+
+### Quick Start with Docker
+
+```bash
+# Using docker-compose (recommended)
+docker-compose up
+
+# Or build and run manually from parent directory
+cd /path/to/parent  # directory containing CIRE/, cire-explorer/, and llvm-upstream/
+docker build -t cire-explorer:latest -f cire-explorer/Dockerfile .
+docker run -p 10240:10240 cire-explorer:latest
+```
+
+Then open [http://localhost:10240](http://localhost:10240) in your browser.
+
+### What's Included
+
+The Docker image includes:
+- **CIRE Explorer Web UI** - Interactive compiler explorer interface
+- **CIRE** - Complete error analysis toolchain
+- **LLVM 22.0.0git** - Full clang/LLVM toolchain (from llvm-upstream)
+- All dependencies pre-configured
+
+### Build Script
+
+```bash
+# From cire-explorer directory
+./docker-build.sh                    # Build local image
+./docker-build.sh --tag v1.0         # Build with specific tag
+./docker-build.sh --push             # Build and push to registry
+```
+
+See [DOCKER.md](DOCKER.md) for complete Docker documentation.
