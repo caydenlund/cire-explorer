@@ -36,6 +36,8 @@ import {BaseTool} from './base-tool.js';
 export class CireTool extends BaseTool {
     private originalInputFilename?: string;
     private irOutputAsmLines?: ParsedAsmResultLine[];
+    private jsonResults?: any;
+    private execDir?: string;
 
     static get key() {
         return 'cire-tool';
@@ -50,7 +52,7 @@ export class CireTool extends BaseTool {
         // Extract LLVM IR content from the IR output
         const llvmIRLines = compilationInfo.irOutput.asm.map(line => line.text);
         const llvmIRContent = llvmIRLines.join('\n');
-        
+
         // Basic validation that this is LLVM IR
         if (!llvmIRContent.includes('target triple') && !llvmIRContent.includes('define ') && !llvmIRContent.includes('@')) {
             return this.createErrorResponse('<IR output does not appear to be valid LLVM IR>');
@@ -63,38 +65,95 @@ export class CireTool extends BaseTool {
         // Write LLVM IR to a temporary file for CIRE to process
         const llvmIRFilename = compilationInfo.outputFilename + '.ll';
         await fs.writeFile(llvmIRFilename, llvmIRContent);
-        
-        return super.runTool(compilationInfo, llvmIRFilename, args);
+
+        // Store the execution directory for reading results.json later
+        this.execDir = path.dirname(llvmIRFilename);
+
+        // Run the tool (without --stdout to get human-readable output)
+        // We need to call the base implementation but intercept to load JSON before parsing
+        const execOptions = compilationInfo.execOptions || this.getDefaultExecOptions();
+        if (compilationInfo.preparedLdPaths) execOptions.ldPath = compilationInfo.preparedLdPaths;
+        execOptions.customCwd = this.execDir;
+
+        let toolArgs = args || [];
+        if (this.addOptionsToToolArgs) toolArgs = this.tool.options.concat(toolArgs);
+        toolArgs.push(llvmIRFilename);
+
+        const toolExe = this.getToolExe(compilationInfo);
+
+        try {
+            const execResult = await this.exec(toolExe, toolArgs, execOptions);
+
+            // Try to read the JSON results file for source mapping BEFORE converting result
+            try {
+                const jsonPath = path.join(this.execDir, 'results.json');
+                const jsonContent = await fs.readFile(jsonPath, 'utf-8');
+                this.jsonResults = JSON.parse(jsonContent);
+            } catch (e) {
+                // JSON file not available, continue without it
+                this.jsonResults = null;
+            }
+
+            return this.convertResult(execResult, llvmIRFilename);
+        } catch (e) {
+            return this.createErrorResponse('Error while running CIRE');
+        }
     }
 
     private parseCireOutput(lines: string, inputFilename?: string): ResultLine[] {
         const result: ResultLine[] = [];
         const instructionToSourceMap = this.createInstructionToSourceMap();
-        
+
+        // Build a map from IR representation to source location from JSON
+        const jsonSourceMap = new Map<string, {line: number; column?: number}>();
+        if (this.jsonResults?.results?.per_instruction_errors) {
+            for (const instr of this.jsonResults.results.per_instruction_errors) {
+                if (instr.source_location) {
+                    // Map the IR representation to source location
+                    jsonSourceMap.set(instr.ir_representation, {
+                        line: instr.source_location.line,
+                        column: instr.source_location.column
+                    });
+                    // Also map the instruction name
+                    jsonSourceMap.set(instr.instruction_name, {
+                        line: instr.source_location.line,
+                        column: instr.source_location.column
+                    });
+                }
+            }
+        }
+
         lines.split('\n').forEach(line => {
             const lineObj: ResultLine = {text: line};
-            
-            // Look for CIRE instruction lines like: "add7 (fadd): error contribution: 8.426e-01 (35.7%) |   %add7 = fadd double %0, %div6"
-            const cireMatch = line.match(/^(\w+)\s*\([^)]+\):[^|]*\|\s*(.+)$/);
-            if (cireMatch) {
-                const llvmInstruction = cireMatch[2].trim();
-                let sourceInfo = instructionToSourceMap.get(llvmInstruction);
-                
-                // If exact match fails, try partial matches
+
+            // Look for CIRE instruction lines in the text output
+            // Format: "  %add = fadd double %x, %0                     3.5639e-13      20.04%"
+            // Extract just the instruction part before the whitespace padding (2+ spaces)
+            const instrMatch = line.match(/^\s*(%\w+\s*=\s*\S.*?)\s{2,}/);
+            if (instrMatch) {
+                const irRepr = instrMatch[1].trim();
+
+                // Try to find source location from JSON first
+                let sourceInfo = jsonSourceMap.get(irRepr);
+
+                // Fallback to instruction name matching (check both JSON and IR maps)
                 if (!sourceInfo) {
-                    // Try matching just the instruction part without debug info
-                    const cleanInstr = llvmInstruction.replace(/,\s*!dbg.*$/, '').trim();
-                    sourceInfo = instructionToSourceMap.get(cleanInstr);
-                }
-                
-                if (!sourceInfo) {
-                    // Try matching the variable name (e.g., "%add7")
-                    const varMatch = llvmInstruction.match(/^\s*(%\w+)/);
-                    if (varMatch) {
-                        sourceInfo = instructionToSourceMap.get(varMatch[1]);
+                    const nameMatch = irRepr.match(/^(%\w+)/);
+                    if (nameMatch) {
+                        const varName = nameMatch[1];
+                        sourceInfo = jsonSourceMap.get(varName) || instructionToSourceMap.get(varName);
                     }
                 }
-                
+
+                // Fallback to IR-based source mapping
+                if (!sourceInfo) {
+                    sourceInfo = instructionToSourceMap.get(irRepr);
+                    if (!sourceInfo) {
+                        // Try matching with leading spaces
+                        sourceInfo = instructionToSourceMap.get('  ' + irRepr);
+                    }
+                }
+
                 if (sourceInfo) {
                     // Add both tag (for clickability) and source (for mouseover highlighting)
                     lineObj.tag = {
@@ -104,7 +163,7 @@ export class CireTool extends BaseTool {
                         severity: 1, // Info level for CIRE analysis results
                         file: inputFilename ? path.basename(inputFilename) : undefined,
                     };
-                    
+
                     // Add source information for mouseover highlighting
                     lineObj.source = {
                         file: inputFilename ? path.basename(inputFilename) : null,
@@ -113,10 +172,10 @@ export class CireTool extends BaseTool {
                     };
                 }
             }
-            
+
             result.push(lineObj);
         });
-        
+
         return result;
     }
 
@@ -156,11 +215,20 @@ export class CireTool extends BaseTool {
             }
             
             // Fallback: use existing source mapping from parsed line if available
-            if (parsedLine.source?.line && !instrWithDebugMatch) {
+            if (parsedLine.source?.line) {
                 instructionMap.set(lineText, {
                     line: parsedLine.source.line,
                     column: parsedLine.source.column
                 });
+
+                // Also extract and store the variable name for matching
+                const varMatch = lineText.match(/^\s*(%\w+)\s*=/);
+                if (varMatch) {
+                    instructionMap.set(varMatch[1], {
+                        line: parsedLine.source.line,
+                        column: parsedLine.source.column
+                    });
+                }
             }
         });
         
@@ -186,22 +254,22 @@ export class CireTool extends BaseTool {
         return debugMap;
     }
 
-    protected override parseOutput(lines: string, inputFilename?: string, pathPrefix?: string): ResultLine[] {
+    protected override parseOutput(lines: string, inputFilename?: string): ResultLine[] {
         return this.parseCireOutput(lines, inputFilename);
     }
 
-    override convertResult(result: UnprocessedExecResult, inputFilepath?: string, exeDir?: string): ToolResult {
+    override convertResult(result: UnprocessedExecResult, inputFilepath?: string): ToolResult {
         // Use the original source file for parsing, not the temporary LLVM IR file
         const sourceFilepath = this.originalInputFilename || inputFilepath;
         const transformedFilepath = sourceFilepath ? result.filenameTransform(sourceFilepath) : undefined;
-        
+
         return {
             id: this.tool.id,
             name: this.tool.name,
             code: result.code,
             languageId: this.tool.languageId,
-            stderr: this.parseOutput(result.stderr, transformedFilepath, exeDir),
-            stdout: this.parseOutput(result.stdout, transformedFilepath, exeDir),
+            stderr: this.parseOutput(result.stderr, transformedFilepath),
+            stdout: this.parseOutput(result.stdout, transformedFilepath),
         };
     }
 }
