@@ -39,28 +39,49 @@ COPY . ./
 RUN npm run webpack
 
 # ============================================================================
-# Stage 2: Runtime Image - CIRE base + Explorer UI
+# Stage 2: Pull FPChecker from pre-built image
+# ============================================================================
+FROM caydenlund/fpchecker:latest AS fpchecker
+
+# ============================================================================
+# Stage 3: Runtime Image - CIRE base + Explorer UI + FPChecker
 # ============================================================================
 FROM cire:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 LABEL maintainer="CIRE Team"
-LABEL description="CIRE Explorer - Interactive Compiler Explorer with CIRE error analysis and LLVM"
+LABEL description="CIRE Explorer - Interactive Compiler Explorer with CIRE error analysis, LLVM, and FPChecker"
 LABEL version="1.0"
 
 ENTRYPOINT []
 
-# Install Node.js runtime and curl (for health checks)
+# Install Node.js runtime, Python, curl, and C++ development tools for FPChecker
 RUN apt-get update && apt-get install -y \
     curl \
     binutils \
+    python3 \
+    python3-pip \
+    build-essential \
+    libstdc++-11-dev \
+    cmake \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Python dependencies for FPChecker
+RUN pip3 install matplotlib
+
 # Copy CIRE Explorer application
 COPY --from=explorer-builder /app /app
+
+# Copy FPChecker installation from fpchecker image
+COPY --from=fpchecker /opt/fpchecker /opt/fpchecker
+COPY --from=fpchecker /opt/llvm/lib /opt/fpchecker-llvm/lib
+
+# Add FPChecker to PATH
+ENV PATH="/opt/fpchecker/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/fpchecker/lib64:/opt/fpchecker-llvm/lib:${LD_LIBRARY_PATH}"
 
 WORKDIR /app
 
