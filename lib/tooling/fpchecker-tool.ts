@@ -23,6 +23,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import path from 'node:path';
+import fs from 'fs-extra';
 
 import {CompilationInfo} from '../../types/compilation/compilation.interfaces.js';
 import {UnprocessedExecResult} from '../../types/execution/execution.interfaces.js';
@@ -31,15 +32,84 @@ import {logger} from '../logger.js';
 
 import {BaseTool} from './base-tool.js';
 
+interface FPCheckerLogEntry {
+    input: string;
+    file: string;
+    line: number;
+    infinity_pos: number;
+    infinity_neg: number;
+    nan: number;
+    division_zero: number;
+    cancellation: number;
+    comparison: number;
+    underflow: number;
+    latent_infinity_pos: number;
+    latent_infinity_neg: number;
+    latent_underflow: number;
+}
+
 export class FPCheckerTool extends BaseTool {
+    private fpCheckerLogs: FPCheckerLogEntry[] = [];
+    private tagsAdded = false;
+
     static get key() {
         return 'fpchecker-tool';
+    }
+
+    private async readFPCheckerLogs(workDir: string): Promise<FPCheckerLogEntry[]> {
+        try {
+            const logsDir = path.join(workDir, '.fpc_logs');
+
+            // Check if logs directory exists
+            if (!await fs.pathExists(logsDir)) {
+                return [];
+            }
+
+            // Find all fpc_*.json files
+            const files = await fs.readdir(logsDir);
+            const jsonFiles = files.filter(f => f.startsWith('fpc_') && f.endsWith('.json'));
+
+            if (jsonFiles.length === 0) {
+                return [];
+            }
+
+            // Read the most recent log file
+            const logFile = path.join(logsDir, jsonFiles[jsonFiles.length - 1]);
+            const content = await fs.readFile(logFile, 'utf-8');
+            const logs: FPCheckerLogEntry[] = JSON.parse(content);
+
+            return logs;
+        } catch (e) {
+            logger.warn('Failed to read FPChecker logs:', e);
+            return [];
+        }
+    }
+
+    private formatFPCheckerErrors(entry: FPCheckerLogEntry): string[] {
+        const errors: string[] = [];
+
+        if (entry.division_zero > 0) errors.push(`Division by zero: ${entry.division_zero}`);
+        if (entry.infinity_pos > 0) errors.push(`Positive infinity: ${entry.infinity_pos}`);
+        if (entry.infinity_neg > 0) errors.push(`Negative infinity: ${entry.infinity_neg}`);
+        if (entry.nan > 0) errors.push(`NaN: ${entry.nan}`);
+        if (entry.cancellation > 0) errors.push(`Cancellation: ${entry.cancellation}`);
+        if (entry.comparison > 0) errors.push(`Comparison: ${entry.comparison}`);
+        if (entry.underflow > 0) errors.push(`Underflow: ${entry.underflow}`);
+        if (entry.latent_infinity_pos > 0) errors.push(`Latent positive infinity: ${entry.latent_infinity_pos}`);
+        if (entry.latent_infinity_neg > 0) errors.push(`Latent negative infinity: ${entry.latent_infinity_neg}`);
+        if (entry.latent_underflow > 0) errors.push(`Latent underflow: ${entry.latent_underflow}`);
+
+        return errors;
     }
 
     override async runTool(compilationInfo: CompilationInfo, inputFilepath?: string, args?: string[]) {
         if (!inputFilepath) {
             return this.createErrorResponse('<FPChecker requires a source file>');
         }
+
+        // Reset state for new run
+        this.fpCheckerLogs = [];
+        this.tagsAdded = false;
 
         const execOptions = compilationInfo.execOptions || this.getDefaultExecOptions();
         if (compilationInfo.preparedLdPaths) execOptions.ldPath = compilationInfo.preparedLdPaths;
@@ -81,10 +151,29 @@ export class FPCheckerTool extends BaseTool {
 
             const execResult = await this.exec(outputBinary, [], execOptions);
 
-            // Combine compilation and execution output
+            // Step 3: Read and parse FPChecker logs
+            this.fpCheckerLogs = await this.readFPCheckerLogs(workDir);
+
+            // Format logs as text output
+            let logOutput = '\n=== FPChecker Floating-Point Error Analysis ===\n\n';
+            if (this.fpCheckerLogs.length === 0) {
+                logOutput += 'No floating-point errors detected.\n';
+            } else {
+                for (const entry of this.fpCheckerLogs) {
+                    const errors = this.formatFPCheckerErrors(entry);
+                    if (errors.length > 0) {
+                        logOutput += `${entry.file}:${entry.line}\n`;
+                        for (const error of errors) {
+                            logOutput += `  - ${error}\n`;
+                        }
+                    }
+                }
+            }
+
+            // Combine compilation, execution output, and parsed logs
             const combinedResult: UnprocessedExecResult = {
                 ...execResult,
-                stdout: compileResult.stdout + (compileResult.stdout && execResult.stdout ? '\n' : '') + execResult.stdout,
+                stdout: compileResult.stdout + (compileResult.stdout && execResult.stdout ? '\n' : '') + execResult.stdout + logOutput,
                 stderr: compileResult.stderr + (compileResult.stderr && execResult.stderr ? '\n' : '') + execResult.stderr,
             };
 
@@ -98,12 +187,12 @@ export class FPCheckerTool extends BaseTool {
     protected override parseOutput(lines: string, inputFilename?: string): ResultLine[] {
         const result: ResultLine[] = [];
 
+        // First, add output lines
         lines.split('\n').forEach(line => {
             const lineObj: ResultLine = {text: line};
 
             // Highlight FPChecker-specific output
             if (line.includes('#FPCHECKER:')) {
-                // Mark FPChecker messages as informational
                 lineObj.tag = {
                     line: 0,
                     column: 0,
@@ -112,8 +201,55 @@ export class FPCheckerTool extends BaseTool {
                 };
             }
 
+            // Make file:line references clickable
+            const fileLineMatch = line.match(/^(.+):(\d+)$/);
+            if (fileLineMatch) {
+                const [, file, lineNum] = fileLineMatch;
+                lineObj.tag = {
+                    line: parseInt(lineNum, 10),
+                    column: 0,
+                    text: line,
+                    severity: 2, // Warning level
+                    file: file,
+                };
+            }
+
             result.push(lineObj);
         });
+
+        // Then, add tags for source code lines with errors (tooltips only, no text output)
+        // Only add once to avoid duplicates from stderr/stdout both calling parseOutput
+        if (!this.tagsAdded && this.fpCheckerLogs.length > 0) {
+            this.tagsAdded = true;
+
+            // Group by line number to avoid duplicates
+            const errorsByLine = new Map<number, {file: string; errors: string[]}>();
+
+            for (const entry of this.fpCheckerLogs) {
+                const errors = this.formatFPCheckerErrors(entry);
+                if (errors.length > 0) {
+                    if (!errorsByLine.has(entry.line)) {
+                        errorsByLine.set(entry.line, {file: entry.file, errors: []});
+                    }
+                    errorsByLine.get(entry.line)!.errors.push(...errors);
+                }
+            }
+
+            // Create one tag per line
+            for (const [lineNum, {file, errors}] of errorsByLine) {
+                const errorMessage = `FPChecker: ${errors.join(', ')}`;
+                result.push({
+                    text: '', // Empty text so it doesn't show in output
+                    tag: {
+                        line: lineNum,
+                        column: 0,
+                        text: errorMessage,
+                        severity: 2, // Warning level
+                        file: file,
+                    },
+                });
+            }
+        }
 
         return result;
     }

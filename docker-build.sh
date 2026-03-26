@@ -89,7 +89,7 @@ fi
 
 # Build the image
 echo "Building image..."
-docker build -t "$FULL_IMAGE" .
+DOCKER_BUILDKIT=1 docker build --progress=plain -t "$FULL_IMAGE" .
 
 echo ""
 echo "Build complete!"

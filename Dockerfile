@@ -12,7 +12,7 @@
 # ============================================================================
 # Stage 1: Build CIRE Explorer (Node.js application)
 # ============================================================================
-FROM ubuntu:22.04 AS explorer-builder
+FROM docker.io/ubuntu:22.04 AS explorer-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -41,12 +41,12 @@ RUN npm run webpack
 # ============================================================================
 # Stage 2: Pull FPChecker from pre-built image
 # ============================================================================
-FROM caydenlund/fpchecker:latest AS fpchecker
+FROM docker.io/caydenlund/fpchecker:latest AS fpchecker
 
 # ============================================================================
 # Stage 3: Runtime Image - CIRE base + Explorer UI + FPChecker
 # ============================================================================
-FROM cire:latest
+FROM docker.io/caydenlund/cire:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -74,6 +74,11 @@ RUN pip3 install matplotlib
 
 # Copy CIRE Explorer application
 COPY --from=explorer-builder /app /app
+
+# In production, copy webpack build artifacts to expected locations
+RUN cp /app/out/dist/manifest.json /app/manifest.json && \
+    mkdir -p /app/static && \
+    cp -r /app/out/webpack/static/* /app/static/
 
 # Copy FPChecker installation from fpchecker image
 COPY --from=fpchecker /opt/fpchecker /opt/fpchecker
@@ -116,7 +121,7 @@ RUN echo "# CIRE Explorer Configuration" > /app/etc/config/c.local.properties &&
     echo "tools.fpchecker.name=FPChecker" >> /app/etc/config/c.local.properties && \
     echo "tools.fpchecker.type=independent" >> /app/etc/config/c.local.properties && \
     echo "tools.fpchecker.class=fpchecker-tool" >> /app/etc/config/c.local.properties && \
-    echo "tools.fpchecker.options=-g -include /opt/fpchecker/src/Runtime_cpu.h -fpass-plugin=/opt/fpchecker/lib/libfpchecker_cpu.so" >> /app/etc/config/c.local.properties
+    echo "tools.fpchecker.options=-g -include /opt/fpchecker/src/Runtime_cpu.h -fpass-plugin=/opt/fpchecker/lib/libfpchecker_cpu.so -lm -Wno-format" >> /app/etc/config/c.local.properties
 
 # Expose Compiler Explorer port
 EXPOSE 10240
@@ -131,7 +136,8 @@ RUN mkdir -p /workspace
 # Set working directory to /app where node_modules is located
 WORKDIR /app
 
-# Default command runs the explorer
+# Default command runs the explorer in production mode
+ENV NODE_ENV=production
 CMD ["node", "--no-warnings=ExperimentalWarning", "--import=tsx", "app.ts"]
 
 # ============================================================================
