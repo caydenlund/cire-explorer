@@ -30,6 +30,7 @@ export {ClangQueryTool} from './clang-query-tool.js';
 export {ClangTidyTool} from './clang-tidy-tool.js';
 export {ClippyTool} from './clippy-tool.js';
 export {CompilerDropinTool} from './compiler-dropin-tool.js';
+export {FPCheckerTool} from './fpchecker-tool.js';
 export {LLVMCovTool} from './llvm-cov-tool.js';
 export {LLVMDWARFDumpTool} from './llvm-dwarfdump-tool.js';
 export {LLVMMcaTool} from './llvm-mca-tool.js';

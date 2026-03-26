@@ -77,10 +77,17 @@ COPY --from=explorer-builder /app /app
 
 # Copy FPChecker installation from fpchecker image
 COPY --from=fpchecker /opt/fpchecker /opt/fpchecker
-COPY --from=fpchecker /opt/llvm/lib /opt/fpchecker-llvm/lib
+COPY --from=fpchecker /opt/llvm /opt/fpchecker-llvm
+
+# Fix FPChecker wrapper scripts to use Docker paths instead of build-time paths
+RUN sed -i "s|export FPC_COMPILER='.*'|export FPC_COMPILER='/opt/fpchecker-llvm/bin/clang'|g" /opt/fpchecker/cpu_checking/cc_frontend.sh && \
+    sed -i "s|export FPC_COMPILER='.*'|export FPC_COMPILER='/opt/fpchecker-llvm/bin/clang++'|g" /opt/fpchecker/cpu_checking/cxx_frontend.sh && \
+    sed -i 's|EXTRA_FLAGS=".*"|EXTRA_FLAGS=""|g' /opt/fpchecker/cpu_checking/cc_frontend.sh && \
+    sed -i 's|EXTRA_FLAGS=".*"|EXTRA_FLAGS=""|g' /opt/fpchecker/cpu_checking/cxx_frontend.sh && \
+    ln -s /opt/fpchecker/lib64 /opt/fpchecker/lib
 
 # Add FPChecker to PATH
-ENV PATH="/opt/fpchecker/bin:${PATH}"
+ENV PATH="/opt/fpchecker/bin:/opt/fpchecker-llvm/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/opt/fpchecker/lib64:/opt/fpchecker-llvm/lib:${LD_LIBRARY_PATH}"
 
 WORKDIR /app
@@ -88,10 +95,28 @@ WORKDIR /app
 # Create configuration directory
 RUN mkdir -p /app/etc/config
 
-# Create local configuration for CIRE and clang
+# Create local configuration for CIRE, clang, and FPChecker
 RUN echo "# CIRE Explorer Configuration" > /app/etc/config/c.local.properties && \
+    echo "" >> /app/etc/config/c.local.properties && \
+    echo "# Compiler configuration" >> /app/etc/config/c.local.properties && \
+    echo "compiler.cclangdefault.exe=/usr/local/bin/clang" >> /app/etc/config/c.local.properties && \
+    echo "" >> /app/etc/config/c.local.properties && \
+    echo "# Tools configuration" >> /app/etc/config/c.local.properties && \
+    echo "tools=cire:fpchecker" >> /app/etc/config/c.local.properties && \
+    echo "" >> /app/etc/config/c.local.properties && \
+    echo "# CIRE tool" >> /app/etc/config/c.local.properties && \
     echo "tools.cire.exe=/usr/local/bin/CIRE_LLVM" >> /app/etc/config/c.local.properties && \
-    echo "compiler.cclangdefault.exe=/usr/local/bin/clang" >> /app/etc/config/c.local.properties
+    echo "tools.cire.name=CIRE" >> /app/etc/config/c.local.properties && \
+    echo "tools.cire.type=postcompilation" >> /app/etc/config/c.local.properties && \
+    echo "tools.cire.class=cire-tool" >> /app/etc/config/c.local.properties && \
+    echo "tools.cire.options=--default-domain=[-10,10]" >> /app/etc/config/c.local.properties && \
+    echo "" >> /app/etc/config/c.local.properties && \
+    echo "# FPChecker tool" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.exe=/opt/fpchecker-llvm/bin/clang" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.name=FPChecker" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.type=independent" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.class=fpchecker-tool" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.options=-g -include /opt/fpchecker/src/Runtime_cpu.h -fpass-plugin=/opt/fpchecker/lib/libfpchecker_cpu.so" >> /app/etc/config/c.local.properties
 
 # Expose Compiler Explorer port
 EXPOSE 10240
