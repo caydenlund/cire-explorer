@@ -80,6 +80,8 @@ RUN cp /app/out/dist/manifest.json /app/manifest.json && \
     mkdir -p /app/static && \
     cp -r /app/out/webpack/static/* /app/static/
 
+# Examples directory is included from builder stage via COPY --from=explorer-builder /app /app
+
 # Copy FPChecker installation from fpchecker image
 COPY --from=fpchecker /opt/fpchecker /opt/fpchecker
 COPY --from=fpchecker /opt/llvm /opt/fpchecker-llvm
