@@ -1,8 +1,102 @@
 # CIRE Explorer
 
-CIRE Explorer is a specialized version of Compiler Explorer configured to work with CIRE, a tool for providing rigid error bounds introduced by floating-point roundoff in computations.
+CIRE Explorer is a specialized version of Compiler Explorer that integrates two floating-point analysis tools:
+- **CIRE**: Provides rigid error bounds introduced by floating-point roundoff in computations
+- **FPChecker**: Detects numerical instabilities like catastrophic cancellation and latent infinity
 
-## Quick Start
+## Quick Start with Docker
+
+The easiest way to get started is using the pre-built Docker container:
+
+```bash
+docker run -p 10240:10240 caydenlund/cire-explorer
+```
+
+Then open [http://localhost:10240](http://localhost:10240) in your browser.
+
+## Demo 1: Analyzing Roundoff Error with CIRE
+
+Let's analyze a simple floating-point computation to understand how roundoff errors propagate through the calculation.
+
+### Step 1: Write Your Function
+
+Enter this simple function in the editor:
+
+```c
+double compute(double x, double y) {
+    return x - y * 0.5;
+}
+```
+
+This function performs a single basic block computation: multiply `y` by 0.5, then subtract from `x`.
+
+### Step 2: Configure the Compiler
+
+1. **Select Language**: Choose **C** from the language dropdown (top-left)
+2. **Select Compiler**: Choose **clang default** from the compiler dropdown. In "Compiler options", add some optimization level: `-O1`, `-O2`, or `-O3`
+
+### Step 3: Open the LLVM IR Pane
+
+1. Click the **"Add new..."** button in the compiler output pane
+2. Select **"LLVM IR"** from the dropdown
+
+You'll see the LLVM intermediate representation of your function.
+
+### Step 4: Open the CIRE Tool
+
+1. In the LLVM IR pane, click the **"Add tool..."** button
+2. Select **"CIRE"** from the dropdown
+3. The CIRE analysis pane will appear, showing:
+   - **Absolute and relative error bounds** for the computation for inputs in the range \[-1e6, 1e6\]
+   - **Per-instruction sensitivity analysis (error contribution)** showing how input errors propagate through the computation
+
+The CIRE output will show you the maximum roundoff error that can accumulate in your computation for inputs in the range, expressed as error bounds on the final result.
+
+## Demo 2: Detecting Catastrophic Cancellation with FPChecker
+
+Now let's see how FPChecker detects numerical instabilities when we call our function with problematic inputs.
+
+### Step 1: Add compiler flags
+
+- `-ffp-contract=off` - FPChecker struggles with FMA operations
+- `-fno-inline` - If the computation isn't actually being done, then the instrumentation can't be performed
+
+### Step 2: Add a Main Function
+
+Modify your code to include a `main()` function that triggers catastrophic cancellation:
+
+```c
+double compute(double x, double y) {
+    return x - y * 0.5;
+}
+
+#include <stdio.h>
+
+int main() {
+    double a = 1e10 + 1;
+    double b = 2e10;
+    printf("%f\n", compute(a, b));
+    return 0;
+}
+```
+
+In this example, we're subtracting two very close numbers (`10000000001` and `10000000000`), which causes catastrophic cancellation where significant digits are lost due to subtraction of nearly-equal values.
+
+### Step 3: Open the FPChecker Tool
+
+1. Click the **"Add tool..."** button in the compiler output pane
+2. Select **"FPChecker"** from the dropdown
+3. The FPChecker analysis pane will appear
+
+### Understanding the Results
+
+FPChecker's analysis helps you understand:
+- **Where** numerical instabilities occur in your code
+- **Why** they happen (cancellation, absorption, etc.)
+
+## Building from Source
+
+If you prefer to build and run locally without Docker:
 
 ### Prerequisites
 
@@ -19,83 +113,49 @@ CIRE Explorer is a specialized version of Compiler Explorer configured to work w
    npm install
    ```
 
-2. **Bootstrap CIRE (recommended):**
-   The easiest way to get started is to use the bootstrap script, which automatically downloads the latest CIRE binary:
+2. **Bootstrap CIRE:**
    ```bash
    ./etc/scripts/bootstrap-cire.sh
    ```
 
-   This script will:
-   - Download the latest `CIRE_LLVM` binary from [GitHub releases](https://github.com/caydenlund/CIRE/releases)
-   - Save it to `tools/cire/CIRE_LLVM`
-   - Configure `etc/config/c.local.properties` with the correct path
-
-3. **Configure your compiler (optional):**
-   If needed, you can customize your local configuration in `etc/config/c.local.properties`:
-   ```properties
-   # Point to your clang compiler (optional, defaults to system clang)
-   compiler.cclangdefault.exe=/path/to/your/clang
-   ```
-
-4. **Build and run:**
+3. **Build and run:**
    ```bash
    npm start
    ```
 
-5. **Access the interface:**
+4. **Access the interface:**
    Open [http://localhost:10240](http://localhost:10240) in your browser.
 
-### Manual CIRE Setup
+See the original README sections for manual setup and troubleshooting.
 
-If you prefer to build CIRE from source or use a custom binary:
+## Building Your Own Docker Image
 
-1. Build or obtain the `CIRE_LLVM` binary
-2. Create `etc/config/c.local.properties` with:
-   ```properties
-   tools.cire.exe=/path/to/your/CIRE_LLVM
-   ```
-
-### Troubleshooting
-
-**CIRE not appearing**: Check that `tools.cire.exe` points to a valid executable and the path is absolute.
-
-**Compilation errors**: Verify your clang path in `compiler.cclangdefault.exe` is correct.
-
-**Build issues**: Ensure Node.js 20+ is installed and run `npm install` to update dependencies.
-
-## Docker Setup
-
-The easiest way to run CIRE Explorer with all dependencies included is using Docker.
-
-### Quick Start with Docker
+If you want to build the Docker image yourself:
 
 ```bash
 # Using docker-compose (recommended)
 docker-compose up
 
-# Or build and run manually from parent directory
-cd /path/to/parent  # directory containing CIRE/, cire-explorer/, and llvm-upstream/
+# Or build manually from parent directory containing CIRE/, cire-explorer/, and llvm-upstream/
+cd /path/to/parent
 docker build -t cire-explorer:latest -f cire-explorer/Dockerfile .
 docker run -p 10240:10240 cire-explorer:latest
 ```
 
-Then open [http://localhost:10240](http://localhost:10240) in your browser.
-
-### What's Included
-
 The Docker image includes:
-- **CIRE Explorer Web UI** - Interactive compiler explorer interface
+- **Compiler Explorer Web UI** - Interactive compiler explorer interface
 - **CIRE** - Complete error analysis toolchain
-- **LLVM 22.0.0git** - Full clang/LLVM toolchain (from llvm-upstream)
+- **FPChecker** - Numerical instability detector
+- **LLVM 19.1.7** - Full clang/LLVM toolchain
 - All dependencies pre-configured
 
-### Build Script
-
-```bash
-# From cire-explorer directory
-./docker-build.sh                    # Build local image
-./docker-build.sh --tag v1.0         # Build with specific tag
-./docker-build.sh --push             # Build and push to registry
-```
-
 See [DOCKER.md](DOCKER.md) for complete Docker documentation.
+
+## Learn More
+
+- **CIRE**: [https://github.com/caydenlund/CIRE](https://github.com/caydenlund/CIRE)
+- **Compiler Explorer**: [https://github.com/compiler-explorer/compiler-explorer](https://github.com/compiler-explorer/compiler-explorer)
+
+## Troubleshooting
+
+**FPChecker shows no results**: Ensure your `main()` function actually executes code that could have numerical issues. FPChecker analyzes the execution, not just the code structure.
