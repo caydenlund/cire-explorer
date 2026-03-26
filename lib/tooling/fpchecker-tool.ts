@@ -129,17 +129,34 @@ export class FPCheckerTool extends BaseTool {
         try {
             // Step 1: Compile with FPChecker instrumentation
             const toolExe = this.getToolExe(compilationInfo);
+
+            // Include the original compiler options from the compilation
+            const compilerOptions = compilationInfo.options || [];
+
             const compileArgs = [
                 inputFilepath,
                 '-o',
                 outputBinary,
+                ...compilerOptions,  // Add the original compiler flags
                 ...(this.tool.options || []),
                 ...(args || []),
             ];
 
             logger.info(`FPChecker: Compiling with ${toolExe} ${compileArgs.join(' ')}`);
 
+            // Debug output: Show what flags are being used
+            let debugOutput = '\n=== FPChecker Compilation Flags ===\n';
+            debugOutput += `Tool executable: ${toolExe}\n`;
+            debugOutput += `Compiler options (from original compilation): ${JSON.stringify(compilerOptions)}\n`;
+            debugOutput += `Tool options (from config): ${JSON.stringify(this.tool.options || [])}\n`;
+            debugOutput += `Args parameter: ${JSON.stringify(args || [])}\n`;
+            debugOutput += `Final compile command: ${toolExe} ${compileArgs.join(' ')}\n`;
+            debugOutput += '====================================\n\n';
+
             const compileResult = await this.exec(toolExe, compileArgs, execOptions);
+
+            // Prepend debug output to compilation stdout
+            compileResult.stdout = debugOutput + (compileResult.stdout || '');
 
             if (compileResult.code !== 0) {
                 // Compilation failed
