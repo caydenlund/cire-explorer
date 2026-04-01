@@ -14,17 +14,24 @@ docker run -p 10240:10240 caydenlund/cire-explorer
 
 Then open [http://localhost:10240](http://localhost:10240) in your browser.
 
-## Demo 1: Analyzing Roundoff Error with CIRE
+## Demo: Analyzing Roundoff Error with CIRE and FPChecker
 
 Let's analyze a simple floating-point computation to understand how roundoff errors propagate through the calculation.
 
 ### Step 1: Write Your Function
 
-Enter this simple function in the editor:
+Enter this simple program in the editor:
 
 ```c
-double compute(double x, double y) {
-    return x - y * 0.5;
+float compute(float x, float y) {
+    return x - y * 0.5F;
+}
+
+#include <stdio.h>
+int main() {
+    float a = 1e10F + 1e-3F;
+    float b = 2e10F;
+    printf("%f\n", compute(a, b));
 }
 ```
 
@@ -33,62 +40,30 @@ This function performs a single basic block computation: multiply `y` by 0.5, th
 ### Step 2: Configure the Compiler
 
 1. **Select Language**: Choose **C** from the language dropdown (top-left)
-2. **Select Compiler**: Choose **clang default** from the compiler dropdown. In "Compiler options", add some optimization level: `-O1`, `-O2`, or `-O3`
+2. **Select Compiler**: Choose **clang default** from the compiler dropdown.
+    In "Compiler options", add some optimization level for CIRE: `-O1`, `-O2`, or `-O3`.
+    For FPChecker, also disable FMA operations and inlining with `-ffp-contract=off -fno-inline`.
 
-### Step 3: Open the LLVM IR Pane
+### Step 3a: Open the CIRE Tool
 
-1. Click the **"Add new..."** button in the compiler output pane
+1. Click the **"Add new..." (plus symbol)** button in the compiler output pane
 2. Select **"LLVM IR"** from the dropdown
+    You'll see the LLVM intermediate representation of your function.
+3. In the compiler pane again, click the **"Add tool..." (screwdriver symbol)** button
+4. Select **"CIRE"** from the dropdown
+    The CIRE analysis pane will appear
 
-You'll see the LLVM intermediate representation of your function.
-
-### Step 4: Open the CIRE Tool
-
-1. In the LLVM IR pane, click the **"Add tool..."** button
-2. Select **"CIRE"** from the dropdown
-3. The CIRE analysis pane will appear, showing:
-   - **Absolute and relative error bounds** for the computation for inputs in the range \[-1e6, 1e6\]
-   - **Per-instruction sensitivity analysis (error contribution)** showing how input errors propagate through the computation
-
-The CIRE output will show you the maximum roundoff error that can accumulate in your computation for inputs in the range, expressed as error bounds on the final result.
-
-## Demo 2: Detecting Catastrophic Cancellation with FPChecker
-
-Now let's see how FPChecker detects numerical instabilities when we call our function with problematic inputs.
-
-### Step 1: Add compiler flags
-
-- `-ffp-contract=off` - FPChecker struggles with FMA operations
-- `-fno-inline` - If the computation isn't actually being done, then the instrumentation can't be performed
-
-### Step 2: Add a Main Function
-
-Modify your code to include a `main()` function that triggers catastrophic cancellation:
-
-```c
-double compute(double x, double y) {
-    return x - y * 0.5;
-}
-
-#include <stdio.h>
-
-int main() {
-    double a = 1e10 + 1;
-    double b = 2e10;
-    printf("%f\n", compute(a, b));
-    return 0;
-}
-```
-
-In this example, we're subtracting two very close numbers (`10000000001` and `10000000000`), which causes catastrophic cancellation where significant digits are lost due to subtraction of nearly-equal values.
-
-### Step 3: Open the FPChecker Tool
+### Step 3b: Open the FPChecker Tool
 
 1. Click the **"Add tool..."** button in the compiler output pane
 2. Select **"FPChecker"** from the dropdown
 3. The FPChecker analysis pane will appear
 
 ### Understanding the Results
+
+The CIRE output will show you the maximum roundoff error that can accumulate in your computation for inputs in the range, expressed as error bounds on the final result, along with
+- **Absolute and relative error bounds** for the computation for inputs in the range \[-1e6, 1e6\]
+- **Per-instruction sensitivity analysis (error contribution)** showing how input errors propagate through the computation
 
 FPChecker's analysis helps you understand:
 - **Where** numerical instabilities occur in your code
