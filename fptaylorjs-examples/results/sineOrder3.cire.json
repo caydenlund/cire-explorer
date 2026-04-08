@@ -1,0 +1,72 @@
+{
+  "filename": "ll/sineOrder3.O1.ll",
+  "function": "sineOrder3",
+  "input_domains": {
+    "z": [
+      -2.0,
+      2.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 3.507031561659442e-07,
+    "computation_graph": {
+      "nodes": 8,
+      "outputs": 1
+    },
+    "error_in_ulps": 3158853206.853206,
+    "output_at_witness": 0.8778102397918701,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 1.1383648512719446e-07,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %z, 0x3FEE8EC8A0000000",
+        "node_id": 4,
+        "percentage_contribution": 32.45949833235314,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.151491760419958e-08,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %z, %z",
+        "node_id": 1,
+        "percentage_contribution": 17.54045166764688,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.151491760419958e-08,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %mul, %z",
+        "node_id": 2,
+        "percentage_contribution": 17.54045166764688,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.151491760419958e-08,
+        "instruction_name": "%mul3",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul3 = fmul float %mul1, 0x3FC08345E0000000",
+        "node_id": 6,
+        "percentage_contribution": 17.54045166764688,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.232156752299488e-08,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float %mul2, %mul3",
+        "node_id": 7,
+        "percentage_contribution": 14.919046664706263,
+        "source_location": null
+      }
+    ],
+    "relative_error": 3.99520466119302e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.1102230246251565e-16,
+    "witness_input": {
+      "z": 2.0
+    }
+  }
+}

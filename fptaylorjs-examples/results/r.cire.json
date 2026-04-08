@@ -1,0 +1,36 @@
+{
+  "filename": "ll/r.O1.ll",
+  "function": "r",
+  "input_domains": {
+    "x": [
+      1.0,
+      20.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 2.3841881752037995e-06,
+    "computation_graph": {
+      "nodes": 2,
+      "outputs": 1
+    },
+    "error_in_ulps": 335544655.54465544,
+    "output_at_witness": 40.0,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 2.384185791015625e-06,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %x, %x",
+        "node_id": 1,
+        "percentage_contribution": 99.99990000000005,
+        "source_location": null
+      }
+    ],
+    "relative_error": 5.960470438009499e-08,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 7.105427357601002e-15,
+    "witness_input": {
+      "x": 20.0
+    }
+  }
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 8,
+    "error": 3.46356796576685610e-08,
+    "relative_error": 8.93642977473605561e-09
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 15,
+    "error": 4.03900904943910177e-08,
+    "relative_error": 4.03964286390893141e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 9,
+    "error": 4.06521335705178899e-07,
+    "relative_error": 4.25092945955275055e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 10,
+    "error": 8.97938889465876855e-07,
+    "relative_error": 3.80546346976728431e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 21,
+    "error": 4.03900904943910177e-08,
+    "relative_error": 4.03964286390893141e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 12,
+    "error": 5.77261327627809351e-09,
+    "relative_error": 8.93642977473605561e-09
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 13,
+    "error": 5.37449929005617832e-09,
+    "relative_error": 6.74403491944073980e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 14,
+    "error": 1.89988796396589610e-10,
+    "relative_error": 4.05806785014398862e-08
+  },
+  {
+    "file": "/workspace/src/sine.c",
+    "line": 7,
+    "error": -2.85022991874939180e-08,
+    "relative_error": 1.15515461179175831e-08
+  }
+]

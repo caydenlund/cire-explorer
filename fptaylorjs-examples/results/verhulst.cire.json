@@ -1,0 +1,63 @@
+{
+  "filename": "ll/verhulst.O1.ll",
+  "function": "verhulst",
+  "input_domains": {
+    "x": [
+      0.1,
+      0.30000000000000004
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 1.809025716945055e-07,
+    "computation_graph": {
+      "nodes": 8,
+      "outputs": 1
+    },
+    "error_in_ulps": 1629425508.9474788,
+    "output_at_witness": 0.944680853654163,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 5.630736670816917e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %div, 1.000000e+00",
+        "node_id": 6,
+        "percentage_contribution": 31.125796709654725,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.630736670816916e-08,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x, 4.000000e+00",
+        "node_id": 2,
+        "percentage_contribution": 31.125796709654725,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.630736670816916e-08,
+        "instruction_name": "%div1",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div1 = fdiv float %mul, %add",
+        "node_id": 7,
+        "percentage_contribution": 31.125796709654725,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.1980290667426468e-08,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float %x, 0x3FF1C28F60000000",
+        "node_id": 4,
+        "percentage_contribution": 6.622509871035927,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.914959650073864e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.1102230246251565e-16,
+    "witness_input": {
+      "x": 0.30000000000000004
+    }
+  }
+}

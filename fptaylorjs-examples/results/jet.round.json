@@ -1,0 +1,152 @@
+[
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 18,
+    "error": -1.02703387838687377e-06,
+    "relative_error": 3.33786010475733995e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 37,
+    "error": 7.33595637569806058e-08,
+    "relative_error": 7.94728607367289764e-09
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 7,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 19,
+    "error": -5.50196719295570347e-08,
+    "relative_error": 7.15255735084239863e-07
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 39,
+    "error": 7.51201932871481404e-05,
+    "relative_error": 1.71026709760582419e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 8,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 20,
+    "error": -1.72959276367734560e-06,
+    "relative_error": 7.30752942653676852e-07
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 40,
+    "error": 7.51201932871481404e-05,
+    "relative_error": 1.66294169899178464e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 9,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 22,
+    "error": -2.20078687718228139e-07,
+    "relative_error": 1.78813933771060356e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 41,
+    "error": 7.51201932871481404e-05,
+    "relative_error": 1.66110310041320904e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 50,
+    "error": -1.12680287202238105e-04,
+    "relative_error": 2.48383846312690954e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 10,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 23,
+    "error": -2.20078687718228139e-07,
+    "relative_error": 3.48905236626459197e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 42,
+    "error": -1.12680287202238105e-04,
+    "relative_error": 2.48657907592784761e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 11,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 14,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 24,
+    "error": 1.17375302011168969e-06,
+    "relative_error": 7.44331183485461682e-09
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 43,
+    "error": -1.12680287202238105e-04,
+    "relative_error": 2.48383846312690954e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 12,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 15,
+    "error": -5.50196719295570347e-08,
+    "relative_error": 1.78813933771060356e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 26,
+    "error": -1.98635120796097908e-06,
+    "relative_error": 1.24101055136933601e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 27,
+    "error": -1.12680287202238105e-04,
+    "relative_error": 2.70765939672660787e-08
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 17,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/jet.c",
+    "line": 30,
+    "error": -1.05637770388966601e-05,
+    "relative_error": 4.57763671685521916e-08
+  }
+]

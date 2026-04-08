@@ -1,0 +1,72 @@
+{
+  "filename": "ll/sqrt_add.O1.ll",
+  "function": "sqrt_add",
+  "input_domains": {
+    "x": [
+      1.0,
+      1000.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 8.129849401958712e-08,
+    "computation_graph": {
+      "nodes": 7,
+      "outputs": 1
+    },
+    "error_in_ulps": 1464543469.4895802,
+    "output_at_witness": 0.41421356237309503,
+    "per_instruction_errors": [
+      {
+        "error_contribution": null,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %x, 1.000000e+00",
+        "node_id": 2,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%call",
+        "instruction_type": "sqrt",
+        "ir_representation": "  %call = tail call float @sqrtf(float noundef %add) #4",
+        "node_id": 3,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%call1",
+        "instruction_type": "sqrt",
+        "ir_representation": "  %call1 = tail call float @sqrtf(float noundef %x) #4",
+        "node_id": 4,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%add2",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add2 = fadd float %call, %call1",
+        "node_id": 5,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float 1.000000e+00, %add2",
+        "node_id": 6,
+        "percentage_contribution": null,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.962719268625952e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 5.551115123125783e-17,
+    "witness_input": {
+      "x": 1.0
+    }
+  }
+}

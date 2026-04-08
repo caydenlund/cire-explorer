@@ -1,0 +1,117 @@
+{
+  "filename": "ll/sine.O1.ll",
+  "function": "sine",
+  "input_domains": {
+    "x": [
+      -1.57079632679,
+      1.57079632679
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 2.8674682581241256e-07,
+    "computation_graph": {
+      "nodes": 14,
+      "outputs": 1
+    },
+    "error_in_ulps": 2582785795.7569075,
+    "output_at_witness": 0.9998431013995033,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 5.987434718219755e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %sub, %div4",
+        "node_id": 12,
+        "percentage_contribution": 20.880561454363534,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.959529289004226e-08,
+        "instruction_name": "%sub6",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub6 = fsub float %add, %div5",
+        "node_id": 13,
+        "percentage_contribution": 20.783244146189443,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.512429650365082e-08,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float %x, %div",
+        "node_id": 11,
+        "percentage_contribution": 19.224030239034867,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.850246056915554e-08,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float %mul1, 6.000000e+00",
+        "node_id": 6,
+        "percentage_contribution": 13.427336278290154,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.4031464182764105e-08,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %mul, %x",
+        "node_id": 2,
+        "percentage_contribution": 11.86812237113558,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.983952208852798e-08,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x, %x",
+        "node_id": 1,
+        "percentage_contribution": 10.406225772155105,
+        "source_location": null
+      },
+      {
+        "error_contribution": 4.750050678546725e-09,
+        "instruction_name": "%div4",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div4 = fdiv float %mul2, 1.200000e+02",
+        "node_id": 8,
+        "percentage_contribution": 1.6565312153286644,
+        "source_location": null
+      },
+      {
+        "error_contribution": 4.470996386391428e-09,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %mul, %mul1",
+        "node_id": 3,
+        "percentage_contribution": 1.5592139071545703,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.7905429215529743e-10,
+        "instruction_name": "%mul3",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul3 = fmul float %mul, %mul2",
+        "node_id": 4,
+        "percentage_contribution": 0.09731730817409379,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.7905429215529743e-10,
+        "instruction_name": "%div5",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div5 = fdiv float %mul3, 5.040000e+03",
+        "node_id": 10,
+        "percentage_contribution": 0.09731730817409379,
+        "source_location": null
+      }
+    ],
+    "relative_error": 2.867918230480827e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.1102230246251565e-16,
+    "witness_input": {
+      "x": 1.57079632679
+    }
+  }
+}

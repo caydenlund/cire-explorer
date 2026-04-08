@@ -1,0 +1,50 @@
+[
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 7,
+    "error": -9.53674316406250000e-07,
+    "relative_error": 3.97364282712766249e-08
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 11,
+    "error": -9.53674316406250000e-07,
+    "relative_error": 5.22847781417001649e-09
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 12,
+    "error": -3.86962841730564833e-04,
+    "relative_error": 1.16310689248831253e-08
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 8,
+    "error": -9.53674316406250000e-07,
+    "relative_error": 3.10238886890174879e-09
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 21,
+    "error": -2.92955553504725685e-06,
+    "relative_error": 1.26825770010729766e-08
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 13,
+    "error": -2.92955553504725685e-06,
+    "relative_error": 1.26825770010729766e-08
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 9,
+    "error": 9.53674316406250000e-07,
+    "relative_error": 3.10238886890174879e-09
+  },
+  {
+    "file": "/workspace/src/doppler2.c",
+    "line": 10,
+    "error": 1.76429748535156250e-01,
+    "relative_error": 2.29576776298729389e-08
+  }
+]

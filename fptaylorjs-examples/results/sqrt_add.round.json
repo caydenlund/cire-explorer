@@ -1,0 +1,38 @@
+[
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 9,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 13,
+    "error": 2.42032342501197206e-08,
+    "relative_error": 5.84317763799320275e-08
+  },
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 10,
+    "error": 2.42032343056308719e-08,
+    "relative_error": 1.71142711041584675e-08
+  },
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 19,
+    "error": 2.42032342501197206e-08,
+    "relative_error": 5.84317763799320275e-08
+  },
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 11,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/sqrt_add.c",
+    "line": 12,
+    "error": -9.50060554671949831e-08,
+    "relative_error": 3.93527966820827003e-08
+  }
+]

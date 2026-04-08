@@ -1,0 +1,54 @@
+{
+  "filename": "ll/cosine.O1.ll",
+  "function": "cosine",
+  "input_domains": {
+    "x": [
+      -1.5,
+      1.5
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 1.7881411314028498e-07,
+    "computation_graph": {
+      "nodes": 14,
+      "outputs": 1
+    },
+    "error_in_ulps": 805307173.3071731,
+    "output_at_witness": 1.0,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 5.960464477539063e-08,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float 1.000000e+00, %div",
+        "node_id": 11,
+        "percentage_contribution": 33.333300000000015,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.960464477539063e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %sub, %div3",
+        "node_id": 12,
+        "percentage_contribution": 33.333300000000015,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.960464477539063e-08,
+        "instruction_name": "%sub5",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub5 = fsub float %add, %div4",
+        "node_id": 13,
+        "percentage_contribution": 33.333300000000015,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.7881411314028498e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 2.220446049250313e-16,
+    "witness_input": {
+      "x": 0.0
+    }
+  }
+}

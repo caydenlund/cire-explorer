@@ -1,0 +1,26 @@
+[
+  {
+    "file": "/workspace/src/logexp.c",
+    "line": 10,
+    "error": -2.07707716981531121e-05,
+    "relative_error": 6.96781765742556118e-09
+  },
+  {
+    "file": "/workspace/src/logexp.c",
+    "line": 11,
+    "error": -2.07707716981531121e-05,
+    "relative_error": 6.96548099886507690e-09
+  },
+  {
+    "file": "/workspace/src/logexp.c",
+    "line": 18,
+    "error": -2.86986479025586050e-07,
+    "relative_error": 3.58718059241589757e-08
+  },
+  {
+    "file": "/workspace/src/logexp.c",
+    "line": 12,
+    "error": -2.86986479025586050e-07,
+    "relative_error": 3.58718059241589757e-08
+  }
+]

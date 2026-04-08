@@ -1,0 +1,68 @@
+{
+  "filename": "ll/hypot32.O1.ll",
+  "function": "hypot32",
+  "input_domains": {
+    "x1": [
+      1.0,
+      100.0
+    ],
+    "x2": [
+      1.0,
+      100.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 1.685875626311387e-05,
+    "computation_graph": {
+      "nodes": 6,
+      "outputs": 1
+    },
+    "error_in_ulps": 593164753.3163253,
+    "output_at_witness": 141.4213562373095,
+    "per_instruction_errors": [
+      {
+        "error_contribution": null,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x1, %x1",
+        "node_id": 2,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %x2, %x2",
+        "node_id": 3,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %mul, %mul1",
+        "node_id": 4,
+        "percentage_contribution": null,
+        "source_location": null
+      },
+      {
+        "error_contribution": null,
+        "instruction_name": "%call",
+        "instruction_type": "sqrt",
+        "ir_representation": "  %call = tail call float @sqrtf(float noundef %add) #4",
+        "node_id": 5,
+        "percentage_contribution": null,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.1920940876018998e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 2.842170943040401e-14,
+    "witness_input": {
+      "x1": 100.0,
+      "x2": 100.0
+    }
+  }
+}

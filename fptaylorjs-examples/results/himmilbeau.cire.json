@@ -1,0 +1,113 @@
+{
+  "filename": "ll/himmilbeau.O1.ll",
+  "function": "himmilbeau",
+  "input_domains": {
+    "x1": [
+      -5.0,
+      5.0
+    ],
+    "x2": [
+      -5.0,
+      5.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 0.0004875664818291771,
+    "computation_graph": {
+      "nodes": 13,
+      "outputs": 1
+    },
+    "error_in_ulps": 4288680128.680128,
+    "output_at_witness": 890.0,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 8.225440979003906e-05,
+        "instruction_name": "%add3",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add3 = fadd float %mul1, %x1",
+        "node_id": 8,
+        "percentage_contribution": 16.870398777506118,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.854534149169922e-05,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %x2, %x2",
+        "node_id": 3,
+        "percentage_contribution": 14.058665647921766,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.794929504394531e-05,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %mul, %x2",
+        "node_id": 4,
+        "percentage_contribution": 13.936416381418097,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.306171417236328e-05,
+        "instruction_name": "%sub4",
+        "instruction_type": "fadd",
+        "ir_representation": "  %sub4 = fadd float %add3, -7.000000e+00",
+        "node_id": 10,
+        "percentage_contribution": 12.933972396088024,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.6624412536621094e-05,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x1, %x1",
+        "node_id": 2,
+        "percentage_contribution": 11.613680317848413,
+        "source_location": null
+      },
+      {
+        "error_contribution": 5.3048133850097656e-05,
+        "instruction_name": "%add6",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add6 = fadd float %mul2, %mul5",
+        "node_id": 12,
+        "percentage_contribution": 10.880184718826408,
+        "source_location": null
+      },
+      {
+        "error_contribution": 4.303455352783203e-05,
+        "instruction_name": "%sub",
+        "instruction_type": "fadd",
+        "ir_representation": "  %sub = fadd float %add, -1.100000e+01",
+        "node_id": 6,
+        "percentage_contribution": 8.826397041564796,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.153085708618164e-05,
+        "instruction_name": "%mul5",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul5 = fmul float %sub4, %sub4",
+        "node_id": 11,
+        "percentage_contribution": 6.466986198044012,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.1517276763916016e-05,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %sub, %sub",
+        "node_id": 7,
+        "percentage_contribution": 4.413198520782398,
+        "source_location": null
+      }
+    ],
+    "relative_error": 5.478275076732327e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.1368683772161603e-13,
+    "witness_input": {
+      "x1": 5.0,
+      "x2": 5.0
+    }
+  }
+}

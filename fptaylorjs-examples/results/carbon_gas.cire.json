@@ -1,0 +1,124 @@
+{
+  "filename": "ll/carbon_gas.O1.ll",
+  "function": "carbon_gas",
+  "input_domains": {
+    "N": [
+      1000.0,
+      1000.0
+    ],
+    "T": [
+      300.0,
+      300.0
+    ],
+    "V": [
+      0.1,
+      0.5
+    ],
+    "a": [
+      0.401,
+      0.401
+    ],
+    "b": [
+      4.27e-05,
+      4.27e-05
+    ],
+    "p": [
+      35000000.0,
+      35000000.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 4.258938780613889,
+    "computation_graph": {
+      "nodes": 17,
+      "outputs": 1
+    },
+    "error_in_ulps": 2286500347.3003464,
+    "output_at_witness": 16739009.20000001,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 0.9977226972579962,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %mul1, %p",
+        "node_id": 9,
+        "percentage_contribution": 23.426556441700797,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.9977226972579962,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float %V, %mul2",
+        "node_id": 11,
+        "percentage_contribution": 23.426556441700797,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.9977226972579962,
+        "instruction_name": "%mul3",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul3 = fmul float %sub, %add",
+        "node_id": 12,
+        "percentage_contribution": 23.426556441700797,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.9977226972579962,
+        "instruction_name": "%sub6",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub6 = fsub float %mul3, %mul5",
+        "node_id": 16,
+        "percentage_contribution": 23.426556441700797,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.09316151142120362,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %b, %N",
+        "node_id": 10,
+        "percentage_contribution": 2.1874348569005546,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.08744111061096194,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float %N, %V",
+        "node_id": 6,
+        "percentage_contribution": 2.0531196881481844,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.04372055530548097,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %div, %div",
+        "node_id": 7,
+        "percentage_contribution": 1.0265598440740922,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.04372055530548097,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %mul, %a",
+        "node_id": 8,
+        "percentage_contribution": 1.0265598440740922,
+        "source_location": null
+      }
+    ],
+    "relative_error": 2.5443195171993133e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.862645149230957e-09,
+    "witness_input": {
+      "N": 1000.0,
+      "T": 300.0,
+      "V": 0.5000000000000002,
+      "a": 0.401,
+      "b": 4.27e-05,
+      "p": 35000000.0
+    }
+  }
+}

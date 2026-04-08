@@ -1,0 +1,126 @@
+{
+  "filename": "ll/sqroot.O1.ll",
+  "function": "sqroot",
+  "input_domains": {
+    "y": [
+      0.0,
+      1.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 3.9348418125922085e-07,
+    "computation_graph": {
+      "nodes": 17,
+      "outputs": 1
+    },
+    "error_in_ulps": 1772095212.0952117,
+    "output_at_witness": 1.3984375,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 8.940696716308594e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %mul3, 1.000000e+00",
+        "node_id": 13,
+        "percentage_contribution": 22.721870769230776,
+        "source_location": null
+      },
+      {
+        "error_contribution": 8.568167686462402e-08,
+        "instruction_name": "%add7",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add7 = fadd float %sub, %mul5",
+        "node_id": 15,
+        "percentage_contribution": 21.77512615384616,
+        "source_location": null
+      },
+      {
+        "error_contribution": 8.335337042808533e-08,
+        "instruction_name": "%sub8",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub8 = fsub float %add7, %mul6",
+        "node_id": 16,
+        "percentage_contribution": 21.18341076923078,
+        "source_location": null
+      },
+      {
+        "error_contribution": 8.195638656616211e-08,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float %add, %mul4",
+        "node_id": 14,
+        "percentage_contribution": 20.828381538461546,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.9802322387695313e-08,
+        "instruction_name": "%mul3",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul3 = fmul float %y, 5.000000e-01",
+        "node_id": 5,
+        "percentage_contribution": 7.573956923076926,
+        "source_location": null
+      },
+      {
+        "error_contribution": 7.450580596923828e-09,
+        "instruction_name": "%mul4",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul4 = fmul float %mul, 1.250000e-01",
+        "node_id": 7,
+        "percentage_contribution": 1.8934892307692315,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.05359673500061e-09,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %y, %y",
+        "node_id": 1,
+        "percentage_contribution": 1.5384600000000004,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.725290298461914e-09,
+        "instruction_name": "%mul5",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul5 = fmul float %mul1, 6.250000e-02",
+        "node_id": 9,
+        "percentage_contribution": 0.9467446153846157,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.3283064365386963e-09,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %mul1, %y",
+        "node_id": 3,
+        "percentage_contribution": 0.5917153846153849,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.3283064365386963e-09,
+        "instruction_name": "%mul6",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul6 = fmul float %mul2, 3.906250e-02",
+        "node_id": 11,
+        "percentage_contribution": 0.5917153846153849,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.3969838619232178e-09,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %mul, %y",
+        "node_id": 2,
+        "percentage_contribution": 0.3550292307692309,
+        "source_location": null
+      }
+    ],
+    "relative_error": 2.8137416313508534e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 2.220446049250313e-16,
+    "witness_input": {
+      "y": 1.0
+    }
+  }
+}

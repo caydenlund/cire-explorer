@@ -1,0 +1,340 @@
+{
+  "filename": "ll/kepler2.O1.ll",
+  "function": "kepler2",
+  "input_domains": {
+    "x1": [
+      4.0,
+      6.36
+    ],
+    "x2": [
+      4.0,
+      6.36
+    ],
+    "x3": [
+      4.0,
+      6.36
+    ],
+    "x4": [
+      4.0,
+      6.36
+    ],
+    "x5": [
+      4.0,
+      6.36
+    ],
+    "x6": [
+      4.0,
+      6.36
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 0.0009813679247272986,
+    "computation_graph": {
+      "nodes": 41,
+      "outputs": 1
+    },
+    "error_in_ulps": 8632203554.912537,
+    "output_at_witness": 514.5189120000007,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 9.200315093994146e-05,
+        "instruction_name": "%add34",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add34 = fadd float %mul24, %add33",
+        "node_id": 36,
+        "percentage_contribution": 9.374990625000018,
+        "source_location": null
+      },
+      {
+        "error_contribution": 7.666929244995123e-05,
+        "instruction_name": "%sub",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub = fsub float %add34, %mul26",
+        "node_id": 37,
+        "percentage_contribution": 7.812492187500016,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.133543395996099e-05,
+        "instruction_name": "%sub35",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub35 = fsub float %sub, %mul28",
+        "node_id": 38,
+        "percentage_contribution": 6.249993750000013,
+        "source_location": null
+      },
+      {
+        "error_contribution": 6.133543395996096e-05,
+        "instruction_name": "%add33",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add33 = fadd float %mul10, %mul17",
+        "node_id": 35,
+        "percentage_contribution": 6.2499937500000105,
+        "source_location": null
+      },
+      {
+        "error_contribution": 4.600157546997075e-05,
+        "instruction_name": "%sub36",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub36 = fsub float %sub35, %mul30",
+        "node_id": 39,
+        "percentage_contribution": 4.687495312500011,
+        "source_location": null
+      },
+      {
+        "error_contribution": 4.6001575469970723e-05,
+        "instruction_name": "%add21",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add21 = fadd float %add20, %x5",
+        "node_id": 23,
+        "percentage_contribution": 4.687495312500008,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998051e-05,
+        "instruction_name": "%sub37",
+        "instruction_type": "fsub",
+        "ir_representation": "  %sub37 = fsub float %sub36, %mul32",
+        "node_id": 40,
+        "percentage_contribution": 3.124996875000008,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998049e-05,
+        "instruction_name": "%mul23",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul23 = fmul float %x3, %x6",
+        "node_id": 25,
+        "percentage_contribution": 3.124996875000006,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998049e-05,
+        "instruction_name": "%mul24",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul24 = fmul float %mul23, %add22",
+        "node_id": 26,
+        "percentage_contribution": 3.124996875000006,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998049e-05,
+        "instruction_name": "%add22",
+        "instruction_type": "fsub",
+        "ir_representation": "  %add22 = fsub float %add21, %x6",
+        "node_id": 24,
+        "percentage_contribution": 3.124996875000006,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%add18",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add18 = fadd float %x1, %x2",
+        "node_id": 20,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%mul17",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul17 = fmul float %mul16, %add15",
+        "node_id": 19,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%add20",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add20 = fadd float %add19, %x4",
+        "node_id": 22,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%mul16",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul16 = fmul float %x2, %x5",
+        "node_id": 18,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%add15",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add15 = fadd float %add14, %x6",
+        "node_id": 17,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%add9",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add9 = fadd float %add8, %x6",
+        "node_id": 10,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x1, %x4",
+        "node_id": 11,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%mul10",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul10 = fmul float %mul, %add9",
+        "node_id": 12,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 3.066771697998048e-05,
+        "instruction_name": "%add13",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add13 = fadd float %add12, %x4",
+        "node_id": 15,
+        "percentage_contribution": 3.1249968750000052,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%add8",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add8 = fadd float %add7, %x5",
+        "node_id": 9,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%add12",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add12 = fadd float %add11, %x3",
+        "node_id": 14,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul32",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul32 = fmul float %mul31, %x6",
+        "node_id": 34,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul31",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul31 = fmul float %x4, %x5",
+        "node_id": 33,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul30",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul30 = fmul float %mul29, %x6",
+        "node_id": 32,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul29",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul29 = fmul float %x1, %x2",
+        "node_id": 31,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul28",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul28 = fmul float %mul27, %x5",
+        "node_id": 30,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul27",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul27 = fmul float %x1, %x3",
+        "node_id": 29,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul26",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul26 = fmul float %mul25, %x4",
+        "node_id": 28,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%mul25",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul25 = fmul float %x2, %x3",
+        "node_id": 27,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%add14",
+        "instruction_type": "fsub",
+        "ir_representation": "  %add14 = fsub float %add13, %x5",
+        "node_id": 16,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%add6",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add6 = fadd float %add, %x3",
+        "node_id": 7,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.533385848999024e-05,
+        "instruction_name": "%add19",
+        "instruction_type": "fsub",
+        "ir_representation": "  %add19 = fsub float %add18, %x3",
+        "node_id": 21,
+        "percentage_contribution": 1.5624984375000026,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.9073505401630355e-06,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.1368683772161603e-13,
+    "witness_input": {
+      "x1": 6.36,
+      "x2": 6.36,
+      "x3": 6.36,
+      "x4": 6.36,
+      "x5": 6.36,
+      "x6": 6.36
+    }
+  }
+}

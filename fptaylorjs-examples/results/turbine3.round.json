@@ -1,0 +1,86 @@
+[
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 18,
+    "error": 2.18858680511857528e-07,
+    "relative_error": 1.83495445847776294e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 7,
+    "error": -9.91821252682711929e-07,
+    "relative_error": 1.63021236715373346e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 15,
+    "error": -1.38688511697182548e-06,
+    "relative_error": 1.93481287043953221e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 11,
+    "error": 1.43051153145279386e-08,
+    "relative_error": 1.76606371264694457e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 19,
+    "error": 2.18858680511857528e-07,
+    "relative_error": 1.91524335363616579e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 12,
+    "error": 4.76646356162291340e-07,
+    "relative_error": 9.67212843452729971e-09
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 8,
+    "error": -7.94557718231114762e-10,
+    "relative_error": 2.41704469706794161e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 27,
+    "error": 2.18858680511857528e-07,
+    "relative_error": 1.91524335363616579e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 16,
+    "error": -1.73360639621478185e-07,
+    "relative_error": 1.93481287043953221e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 13,
+    "error": -3.81317084929833072e-06,
+    "relative_error": 9.67212843452729971e-09
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 9,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 17,
+    "error": 4.54980413344685530e-08,
+    "relative_error": 1.53340396260203984e-08
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 14,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/turbine3.c",
+    "line": 10,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  }
+]

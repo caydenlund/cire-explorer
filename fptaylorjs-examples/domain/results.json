@@ -1,0 +1,97 @@
+{
+  "filename": "carbon_gas.ll",
+  "function": "carbon_gas",
+  "input_domains": {
+    "N": [
+      1000.0,
+      1000.0
+    ],
+    "T": [
+      300.0,
+      300.0
+    ],
+    "V": [
+      0.1,
+      0.5
+    ],
+    "a": [
+      0.401,
+      0.401
+    ],
+    "b": [
+      4.27e-05,
+      4.27e-05
+    ],
+    "p": [
+      35000000.0,
+      35000000.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 3.1243328820233103,
+    "computation_graph": {
+      "nodes": 15,
+      "outputs": 1
+    },
+    "error_in_ulps": 1677363443.763443,
+    "output_at_witness": 16739009.200000003,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 0.9977226972579958,
+        "instruction_name": "%0",
+        "instruction_type": "fma",
+        "ir_representation": "  %0 = tail call float @llvm.fmuladd.f32(float %mul, float %div, float %p)",
+        "node_id": 8,
+        "percentage_contribution": 31.933943498743744,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.9977226972579958,
+        "instruction_name": "%1",
+        "instruction_type": "fma",
+        "ir_representation": "  %1 = tail call float @llvm.fmuladd.f32(float %neg, float %b, float %V)",
+        "node_id": 10,
+        "percentage_contribution": 31.933943498743744,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.9977226972579958,
+        "instruction_name": "%3",
+        "instruction_type": "fma",
+        "ir_representation": "  %3 = tail call float @llvm.fmuladd.f32(float %0, float %1, float %neg7)",
+        "node_id": 14,
+        "percentage_contribution": 31.933943498743744,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.08744111061096198,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float %N, %V",
+        "node_id": 6,
+        "percentage_contribution": 2.798713002512567,
+        "source_location": null
+      },
+      {
+        "error_contribution": 0.04372055530548099,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %div, %a",
+        "node_id": 7,
+        "percentage_contribution": 1.3993565012562834,
+        "source_location": null
+      }
+    ],
+    "relative_error": 1.8664980971653388e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.862645149230957e-09,
+    "witness_input": {
+      "N": 1000.0,
+      "T": 300.0,
+      "V": 0.49999999999999994,
+      "a": 0.401,
+      "b": 4.27e-05,
+      "p": 35000000.0
+    }
+  }
+}

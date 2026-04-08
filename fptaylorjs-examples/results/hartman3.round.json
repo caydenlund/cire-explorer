@@ -1,0 +1,326 @@
+[
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 35,
+    "error": 6.45042419478158990e-09,
+    "relative_error": 8.45981415108245563e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 51,
+    "error": -6.83866865358595533e-08,
+    "relative_error": 2.23667880986261693e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 44,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 60,
+    "error": 2.27132266216070689e-21,
+    "relative_error": 4.31397526726823339e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 21,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 14,
+    "error": 5.13992404194141272e-10,
+    "relative_error": 7.19380649946442384e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 29,
+    "error": 6.49506045391490261e-07,
+    "relative_error": 3.02419757260063609e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 10,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 39,
+    "error": -1.70388403830656898e-07,
+    "relative_error": 1.84587556781103955e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 48,
+    "error": 1.49441169074865376e-12,
+    "relative_error": 1.02678882955332500e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 57,
+    "error": 3.08912213864420693e-09,
+    "relative_error": 4.54456650793636300e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 18,
+    "error": -9.56393022555346306e-08,
+    "relative_error": 3.55717540137117331e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 66,
+    "error": 5.58896665059371855e-10,
+    "relative_error": 8.22219956466192759e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 27,
+    "error": 5.74046143952955390e-08,
+    "relative_error": 2.98271359687490801e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 43,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 36,
+    "error": -1.70597047599585494e-09,
+    "relative_error": 5.54440763030577339e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 45,
+    "error": -6.74336975148293050e-12,
+    "relative_error": 4.63327266536413798e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 63,
+    "error": -3.96009235415792845e-16,
+    "relative_error": 7.01219822032586169e-07
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 54,
+    "error": -6.49506045391490261e-07,
+    "relative_error": 3.02419757260063609e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 22,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 15,
+    "error": 5.36310196252998139e-09,
+    "relative_error": 1.31364339382759319e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 31,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 11,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 24,
+    "error": 5.74046143952955390e-09,
+    "relative_error": 2.98271359687490801e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 40,
+    "error": -3.42340609194025092e-07,
+    "relative_error": 2.02673293242615609e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 49,
+    "error": -1.00705527472655376e-07,
+    "relative_error": 3.05334367137518427e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 76,
+    "error": -5.58896665059371855e-10,
+    "relative_error": 8.22219956466192759e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 58,
+    "error": -3.20952857139477646e-16,
+    "relative_error": 6.81979592938273508e-07
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 67,
+    "error": -5.58896665059371855e-10,
+    "relative_error": 8.22219956466192759e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 28,
+    "error": 4.11090866236918373e-07,
+    "relative_error": 2.10488611847462841e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 37,
+    "error": -1.76315784194969183e-09,
+    "relative_error": 4.93765161896956331e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 53,
+    "error": 9.56393022555346306e-08,
+    "relative_error": 3.55717540137117331e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 46,
+    "error": -4.11008826972647512e-09,
+    "relative_error": 1.24615920517076788e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 64,
+    "error": 4.37019923164859469e-14,
+    "relative_error": 3.15615571751304292e-07
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 55,
+    "error": 3.42340609194025092e-07,
+    "relative_error": 2.02673293242615609e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 23,
+    "error": 3.77487197056325385e-09,
+    "relative_error": 1.70958742359458012e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 16,
+    "error": 2.78711320689239983e-09,
+    "relative_error": 2.03602401151780235e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 32,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 12,
+    "error": 1.78770065417666046e-09,
+    "relative_error": 1.31364339382759319e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 25,
+    "error": -1.75475634023314342e-10,
+    "relative_error": 3.14467408017452481e-10
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 34,
+    "error": -2.77278422444737771e-10,
+    "relative_error": 2.32952073645710018e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 50,
+    "error": 8.79064188552547421e-07,
+    "relative_error": 3.22275960500521225e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 59,
+    "error": 1.57515686628896676e-14,
+    "relative_error": 3.41273252270637061e-07
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 20,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 9,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 38,
+    "error": -1.73914337153746601e-07,
+    "relative_error": 2.28090886134227072e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 47,
+    "error": 1.31951907178518013e-08,
+    "relative_error": 1.69313286365910028e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 65,
+    "error": 4.35778552781454544e-21,
+    "relative_error": 2.58651311140594838e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 56,
+    "error": 6.83866865358595533e-08,
+    "relative_error": 2.23667880986261693e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 17,
+    "error": -1.43825502618710743e-08,
+    "relative_error": 6.70991002386109064e-09
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 33,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 13,
+    "error": 4.64975835612335686e-10,
+    "relative_error": 3.39671156428493978e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 26,
+    "error": 3.33984777334261906e-10,
+    "relative_error": 1.51257094531152086e-08
+  },
+  {
+    "file": "/workspace/src/hartman3.c",
+    "line": 42,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  }
+]

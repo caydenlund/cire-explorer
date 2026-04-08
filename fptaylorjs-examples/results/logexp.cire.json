@@ -1,0 +1,36 @@
+{
+  "filename": "ll/logexp.O1.ll",
+  "function": "logexp",
+  "input_domains": {
+    "x": [
+      -8.0,
+      8.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 5.960470471532631e-07,
+    "computation_graph": {
+      "nodes": 5,
+      "outputs": 1
+    },
+    "error_in_ulps": 335544657.43184,
+    "output_at_witness": 8.000335406372896,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 5.960464477539063e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %call, 1.000000e+00",
+        "node_id": 3,
+        "percentage_contribution": 9.999989943757635,
+        "source_location": null
+      }
+    ],
+    "relative_error": 7.450275730670802e-08,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 1.7763568394002505e-15,
+    "witness_input": {
+      "x": 8.0
+    }
+  }
+}

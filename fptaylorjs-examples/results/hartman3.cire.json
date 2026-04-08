@@ -1,0 +1,32 @@
+{
+  "filename": "ll/hartman3.O1.ll",
+  "function": "hartman3",
+  "input_domains": {
+    "x1": [
+      0.0,
+      1.0
+    ],
+    "x2": [
+      0.0,
+      1.0
+    ],
+    "x3": [
+      0.0,
+      1.0
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 1.609901955867048e-06,
+    "computation_graph": {
+      "nodes": 81,
+      "outputs": 1
+    },
+    "error_in_ulps": null,
+    "output_at_witness": 0.0,
+    "per_instruction_errors": [],
+    "relative_error": null,
+    "status": "sound_upper_bound",
+    "ulp_at_output": null,
+    "witness_input": null
+  }
+}

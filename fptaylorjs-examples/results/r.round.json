@@ -1,0 +1,14 @@
+[
+  {
+    "file": "/workspace/src/r.c",
+    "line": 12,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/r.c",
+    "line": 7,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  }
+]

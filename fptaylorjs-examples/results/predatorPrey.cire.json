@@ -1,0 +1,81 @@
+{
+  "filename": "ll/predatorPrey.O1.ll",
+  "function": "predatorPrey",
+  "input_domains": {
+    "x": [
+      0.1,
+      0.30000000000000004
+    ]
+  },
+  "results": {
+    "absolute_error_bound": 8.407176852034566e-08,
+    "computation_graph": {
+      "nodes": 10,
+      "outputs": 1
+    },
+    "error_in_ulps": 1514502341.5224292,
+    "output_at_witness": 0.3354935336043119,
+    "per_instruction_errors": [
+      {
+        "error_contribution": 1.9996972894925588e-08,
+        "instruction_name": "%mul",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul = fmul float %x, %x",
+        "node_id": 1,
+        "percentage_contribution": 23.785598003789172,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.9996972894925588e-08,
+        "instruction_name": "%mul1",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul1 = fmul float %mul, 4.000000e+00",
+        "node_id": 3,
+        "percentage_contribution": 23.785598003789172,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.9996972894925588e-08,
+        "instruction_name": "%add",
+        "instruction_type": "fadd",
+        "ir_representation": "  %add = fadd float %mul2, 1.000000e+00",
+        "node_id": 8,
+        "percentage_contribution": 23.785598003789172,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.9996972894925588e-08,
+        "instruction_name": "%div3",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div3 = fdiv float %mul1, %add",
+        "node_id": 9,
+        "percentage_contribution": 23.785598003789172,
+        "source_location": null
+      },
+      {
+        "error_contribution": 2.722528579249907e-09,
+        "instruction_name": "%div",
+        "instruction_type": "fdiv",
+        "ir_representation": "  %div = fdiv float %x, 0x3FF1C28F60000000",
+        "node_id": 5,
+        "percentage_contribution": 3.2383386565622754,
+        "source_location": null
+      },
+      {
+        "error_contribution": 1.3612642896249534e-09,
+        "instruction_name": "%mul2",
+        "instruction_type": "fmul",
+        "ir_representation": "  %mul2 = fmul float %div, %div",
+        "node_id": 6,
+        "percentage_contribution": 1.6191693282811377,
+        "source_location": null
+      }
+    ],
+    "relative_error": 2.5059132322801095e-07,
+    "status": "sound_upper_bound",
+    "ulp_at_output": 5.551115123125783e-17,
+    "witness_input": {
+      "x": 0.30000000000000004
+    }
+  }
+}

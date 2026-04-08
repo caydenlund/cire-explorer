@@ -1,0 +1,32 @@
+[
+  {
+    "file": "/workspace/src/hypot32.c",
+    "line": 12,
+    "error": 3.61376351065700874e-08,
+    "relative_error": 2.55531668399007528e-10
+  },
+  {
+    "file": "/workspace/src/hypot32.c",
+    "line": 9,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hypot32.c",
+    "line": 19,
+    "error": 3.61376351065700874e-08,
+    "relative_error": 2.55531668399007528e-10
+  },
+  {
+    "file": "/workspace/src/hypot32.c",
+    "line": 10,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/hypot32.c",
+    "line": 11,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  }
+]

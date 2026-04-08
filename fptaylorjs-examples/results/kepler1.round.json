@@ -1,0 +1,146 @@
+[
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 36,
+    "error": -9.76922660811396781e-06,
+    "relative_error": 4.51522017605470063e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 16,
+    "error": -1.16765752409264678e-05,
+    "relative_error": 6.11588357564806739e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 21,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 28,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 33,
+    "error": -1.54912725065514678e-05,
+    "relative_error": 1.10618658358790659e-07
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 37,
+    "error": -7.86187797530146781e-06,
+    "relative_error": 3.25136834568120524e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 38,
+    "error": -7.38504081709834281e-06,
+    "relative_error": 2.97589352453580067e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 49,
+    "error": -7.38504081709834281e-06,
+    "relative_error": 2.97589352453580067e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 18,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 23,
+    "error": -4.76837158203125000e-07,
+    "relative_error": 4.60267521291400191e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 29,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 34,
+    "error": -1.93059697721764678e-05,
+    "relative_error": 2.16526568597918822e-07
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 12,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 14,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 19,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 24,
+    "error": -4.76837158203125000e-07,
+    "relative_error": 7.49743943699627958e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 30,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 35,
+    "error": -1.16765752409264678e-05,
+    "relative_error": 6.11588357564806739e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 13,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 15,
+    "error": 1.47857667798234615e-06,
+    "relative_error": 3.65535534567295594e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 20,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 25,
+    "error": -9.53674316406250000e-07,
+    "relative_error": 7.49743943699627958e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 26,
+    "error": -3.81469726562500000e-06,
+    "relative_error": 7.49743943699627958e-08
+  },
+  {
+    "file": "/workspace/src/kepler1.c",
+    "line": 31,
+    "error": 0.00000000000000000e+00,
+    "relative_error": 0.00000000000000000e+00
+  }
+]

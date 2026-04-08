@@ -1,0 +1,44 @@
+[
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 13,
+    "error": 5.39049818115699964e-08,
+    "relative_error": 5.02354798027811105e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 11,
+    "error": -1.04638298581427591e-08,
+    "relative_error": 3.87161694356401472e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 20,
+    "error": -6.15378931145826868e-09,
+    "relative_error": 1.83424961714730213e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 9,
+    "error": 3.57627882863198465e-09,
+    "relative_error": 3.97364282712766249e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 14,
+    "error": -6.15378931145826868e-09,
+    "relative_error": 1.83424961714730213e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 12,
+    "error": -5.69966301933177988e-09,
+    "relative_error": 7.80283825446934818e-08
+  },
+  {
+    "file": "/workspace/src/predatorPrey.c",
+    "line": 10,
+    "error": 1.43051153145279386e-08,
+    "relative_error": 3.97364282712766249e-08
+  }
+]
