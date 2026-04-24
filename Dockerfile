@@ -119,11 +119,11 @@ RUN echo "# CIRE Explorer Configuration" > /app/etc/config/c.local.properties &&
     echo "tools.cire.options=--default-domain=[-10,10]" >> /app/etc/config/c.local.properties && \
     echo "" >> /app/etc/config/c.local.properties && \
     echo "# FPChecker tool" >> /app/etc/config/c.local.properties && \
-    echo "tools.fpchecker.exe=/opt/fpchecker-llvm/bin/clang" >> /app/etc/config/c.local.properties && \
+    echo "tools.fpchecker.exe=/opt/fpchecker/bin/clang-fpchecker" >> /app/etc/config/c.local.properties && \
     echo "tools.fpchecker.name=FPChecker" >> /app/etc/config/c.local.properties && \
     echo "tools.fpchecker.type=independent" >> /app/etc/config/c.local.properties && \
     echo "tools.fpchecker.class=fpchecker-tool" >> /app/etc/config/c.local.properties && \
-    echo "tools.fpchecker.options=-g -include /opt/fpchecker/src/Runtime_cpu.h -fpass-plugin=/opt/fpchecker/lib/libfpchecker_cpu.so -lm -Wno-format" >> /app/etc/config/c.local.properties
+    echo "tools.fpchecker.options=-lm -Wno-format" >> /app/etc/config/c.local.properties
 
 # Expose Compiler Explorer port
 EXPOSE 10240

@@ -48,39 +48,88 @@ interface FPCheckerLogEntry {
     latent_underflow: number;
 }
 
+interface FPCheckerRoundingEntry {
+    file: string;
+    line: number;
+    error: number;
+    relative_error: number;
+}
+
 export class FPCheckerTool extends BaseTool {
     private fpCheckerLogs: FPCheckerLogEntry[] = [];
+    private fpCheckerRoundingLogs: FPCheckerRoundingEntry[] = [];
     private tagsAdded = false;
 
     static get key() {
         return 'fpchecker-tool';
     }
 
-    private async readFPCheckerLogs(workDir: string): Promise<FPCheckerLogEntry[]> {
+    private async readFPCheckerErrorLogs(workDir: string): Promise<FPCheckerLogEntry[]> {
         try {
             const logsDir = path.join(workDir, '.fpc_logs');
 
             // Check if logs directory exists
             if (!await fs.pathExists(logsDir)) {
+                logger.info(`FPChecker: Logs directory does not exist: ${logsDir}`);
                 return [];
             }
 
             // Find all fpc_*.json files
             const files = await fs.readdir(logsDir);
+            logger.info(`FPChecker: Files in logs directory: ${JSON.stringify(files)}`);
             const jsonFiles = files.filter(f => f.startsWith('fpc_') && f.endsWith('.json'));
 
             if (jsonFiles.length === 0) {
+                logger.info('FPChecker: No fpc_*.json files found in logs directory');
                 return [];
             }
 
             // Read the most recent log file
             const logFile = path.join(logsDir, jsonFiles[jsonFiles.length - 1]);
+            logger.info(`FPChecker: Reading log file: ${logFile}`);
             const content = await fs.readFile(logFile, 'utf-8');
+            logger.info(`FPChecker: Log file content length: ${content.length} bytes`);
+            logger.info(`FPChecker: Log file raw content: ${content}`);
             const logs: FPCheckerLogEntry[] = JSON.parse(content);
 
             return logs;
         } catch (e) {
-            logger.warn('Failed to read FPChecker logs:', e);
+            logger.warn('Failed to read FPChecker error logs:', e);
+            return [];
+        }
+    }
+
+    private async readFPCheckerRoundingLogs(workDir: string): Promise<FPCheckerRoundingEntry[]> {
+        try {
+            const logsDir = path.join(workDir, '.fpc_logs');
+
+            // Check if logs directory exists
+            if (!await fs.pathExists(logsDir)) {
+                logger.info(`FPChecker: Logs directory does not exist (rounding): ${logsDir}`);
+                return [];
+            }
+
+            // Find all fpc_*.json files
+            const files = await fs.readdir(logsDir);
+            logger.info(`FPChecker: Files in logs directory (rounding): ${JSON.stringify(files)}`);
+            const jsonFiles = files.filter(f => f.startsWith('rounding_error_') && f.endsWith('.json'));
+
+            if (jsonFiles.length === 0) {
+                logger.info('FPChecker: No fpc_*.json files found in logs directory (rounding)');
+                return [];
+            }
+
+            // Read the most recent log file
+            const logFile = path.join(logsDir, jsonFiles[jsonFiles.length - 1]);
+            logger.info(`FPChecker: Reading rounding log file: ${logFile}`);
+            const content = await fs.readFile(logFile, 'utf-8');
+            logger.info(`FPChecker: Rounding log file content length: ${content.length} bytes`);
+            logger.info(`FPChecker: Rounding log file raw content: ${content}`);
+            const logs: FPCheckerRoundingEntry[] = JSON.parse(content);
+
+            return logs;
+        } catch (e) {
+            logger.warn('Failed to read FPChecker rounding logs:', e);
             return [];
         }
     }
@@ -102,6 +151,27 @@ export class FPCheckerTool extends BaseTool {
         return errors;
     }
 
+    private formatRoundingErrors(entry: FPCheckerRoundingEntry): string[] {
+        const errors: string[] = [];
+
+        logger.info(`FPChecker: formatRoundingErrors called with entry: ${JSON.stringify(entry)}`);
+        logger.info(`FPChecker: entry.error = ${entry.error}, entry.relative_error = ${entry.relative_error}`);
+
+        // Format absolute error
+        if (entry.error != null) {
+            errors.push(`Absolute error: ${entry.error.toExponential(6)}`);
+        }
+
+        // Format relative error
+        if (entry.relative_error != null) {
+            errors.push(`Relative error: ${entry.relative_error.toExponential(6)}`);
+        }
+
+        logger.info(`FPChecker: formatRoundingErrors returning ${errors.length} errors: ${JSON.stringify(errors)}`);
+
+        return errors;
+    }
+
     override async runTool(compilationInfo: CompilationInfo, inputFilepath?: string, args?: string[]) {
         if (!inputFilepath) {
             return this.createErrorResponse('<FPChecker requires a source file>');
@@ -109,6 +179,7 @@ export class FPCheckerTool extends BaseTool {
 
         // Reset state for new run
         this.fpCheckerLogs = [];
+        this.fpCheckerRoundingLogs = [];
         this.tagsAdded = false;
 
         const execOptions = compilationInfo.execOptions || this.getDefaultExecOptions();
@@ -117,32 +188,22 @@ export class FPCheckerTool extends BaseTool {
         const workDir = path.dirname(inputFilepath);
         execOptions.customCwd = workDir;
 
-        // Set FPC_INSTRUMENT environment variable to enable instrumentation
-        execOptions.env = {
-            ...execOptions.env,
-            FPC_INSTRUMENT: '1',
-        };
+        logger.info(`FPChecker: Initial execOptions: ${JSON.stringify(execOptions)}`);
 
-        // Output binary path
-        const outputBinary = path.join(workDir, 'fpchecker_output');
+        // Output binary paths
+        const outputBinaryError = path.join(workDir, 'fpchecker_output_fperr');
+        const outputBinaryRound = path.join(workDir, 'fpchecker_output_round');
 
         try {
-            // Step 1: Compile with FPChecker instrumentation
             const toolExe = this.getToolExe(compilationInfo);
-
-            // Include the original compiler options from the compilation
             const compilerOptions = compilationInfo.options || [];
 
             const compileArgs = [
                 inputFilepath,
-                '-o',
-                outputBinary,
                 ...compilerOptions,  // Add the original compiler flags
                 ...(this.tool.options || []),
                 ...(args || []),
             ];
-
-            logger.info(`FPChecker: Compiling with ${toolExe} ${compileArgs.join(' ')}`);
 
             // Debug output: Show what flags are being used
             let debugOutput = '\n=== FPChecker Compilation Flags ===\n';
@@ -150,29 +211,115 @@ export class FPCheckerTool extends BaseTool {
             debugOutput += `Compiler options (from original compilation): ${JSON.stringify(compilerOptions)}\n`;
             debugOutput += `Tool options (from config): ${JSON.stringify(this.tool.options || [])}\n`;
             debugOutput += `Args parameter: ${JSON.stringify(args || [])}\n`;
-            debugOutput += `Final compile command: ${toolExe} ${compileArgs.join(' ')}\n`;
             debugOutput += '====================================\n\n';
 
-            const compileResult = await this.exec(toolExe, compileArgs, execOptions);
+            // ===== MODE 1: Floating-Point Error Detection (FPC_INSTRUMENT) =====
 
-            // Prepend debug output to compilation stdout
-            compileResult.stdout = debugOutput + (compileResult.stdout || '');
+            // Set FPC_INSTRUMENT environment variable during compilation
+            const compileOptionsError = {
+                ...execOptions,
+                env: {
+                    ...execOptions.env,
+                    FPC_INSTRUMENT: '1',
+                },
+            };
 
-            if (compileResult.code !== 0) {
-                // Compilation failed
-                return this.convertResult(compileResult, inputFilepath);
+            const compileArgsError = [...compileArgs];
+
+            logger.info(`FPChecker: Compiling with FPC_INSTRUMENT: ${toolExe} ${compileArgsError.join(' ')}`);
+            logger.info(`FPChecker: Compile environment: ${JSON.stringify(compileOptionsError.env)}`);
+
+            const compileResultError = await this.exec(toolExe, compileArgsError, compileOptionsError);
+
+            if (compileResultError.code !== 0) {
+                // Compilation failed for error detection mode
+                compileResultError.stdout = debugOutput + (compileResultError.stdout || '');
+                return this.convertResult(compileResultError, inputFilepath);
             }
 
-            // Step 2: Execute the instrumented binary
-            logger.info(`FPChecker: Executing ${outputBinary}`);
+            // Move a.out to the desired output location (wrapper doesn't support -o)
+            const aoutPath = path.join(workDir, 'a.out');
+            try {
+                await fs.move(aoutPath, outputBinaryError, {overwrite: true});
+            } catch (e) {
+                logger.error('Failed to move a.out to output binary:', e);
+                return this.createErrorResponse('Failed to move compiled binary');
+            }
 
-            const execResult = await this.exec(outputBinary, [], execOptions);
+            // Execute the instrumented binary for error detection (no special env vars needed at runtime)
+            logger.info(`FPChecker: Executing ${outputBinaryError} (error detection mode)`);
+            logger.info(`FPChecker: Working directory: ${workDir}`);
 
-            // Step 3: Read and parse FPChecker logs
-            this.fpCheckerLogs = await this.readFPCheckerLogs(workDir);
+            const execResultError = await this.exec(outputBinaryError, [], execOptions);
+            logger.info(`FPChecker: Error detection execution result - code: ${execResultError.code}, stdout length: ${(execResultError.stdout || '').length}, stderr length: ${(execResultError.stderr || '').length}`);
+            if (execResultError.stdout) logger.info(`FPChecker: Error detection stdout: ${execResultError.stdout}`);
+            if (execResultError.stderr) logger.info(`FPChecker: Error detection stderr: ${execResultError.stderr}`);
 
-            // Format logs as text output
-            let logOutput = '\n=== FPChecker Floating-Point Error Analysis ===\n\n';
+            // Read error detection logs
+            this.fpCheckerLogs = await this.readFPCheckerErrorLogs(workDir);
+            logger.info(`FPChecker: Read ${this.fpCheckerLogs.length} error detection entries`);
+
+            // Clear logs directory before second run to avoid confusion
+            const logsDir = path.join(workDir, '.fpc_logs');
+            try {
+                await fs.remove(logsDir);
+            } catch (e) {
+                logger.warn('Failed to clear FPChecker logs directory:', e);
+            }
+
+            // ===== MODE 2: Shadow Evaluation (FPC_INSTRUMENT_ERR_TRACKING) =====
+
+            // Set FPC_INSTRUMENT_ERR_TRACKING environment variable during compilation
+            const compileOptionsRound = {
+                ...execOptions,
+                env: {
+                    ...execOptions.env,
+                    FPC_INSTRUMENT_ERR_TRACKING: '1',
+                },
+            };
+
+            const compileArgsRound = [...compileArgs];
+
+            logger.info(`FPChecker: Compiling with FPC_INSTRUMENT_ERR_TRACKING: ${toolExe} ${compileArgsRound.join(' ')}`);
+            logger.info(`FPChecker: Rounding compile environment: ${JSON.stringify(compileOptionsRound.env)}`);
+
+            const compileResultRound = await this.exec(toolExe, compileArgsRound, compileOptionsRound);
+
+            if (compileResultRound.code !== 0) {
+                // Compilation failed for shadow evaluation mode
+                // Still show error detection results if available
+                compileResultRound.stdout = debugOutput + (compileResultRound.stdout || '');
+                logger.warn('FPChecker: Shadow evaluation compilation failed, showing error detection results only');
+            } else {
+                // Move a.out to the desired output location (wrapper doesn't support -o)
+                try {
+                    logger.info(`FPChecker: Moving 'a.out' to '${outputBinaryRound}'...`);
+                    await fs.move(aoutPath, outputBinaryRound, {overwrite: true});
+                    logger.info('FPChecker: OK');
+                } catch (e) {
+                    logger.error('Failed to move a.out to output binary:', e);
+                    return this.createErrorResponse('Failed to move compiled binary');
+                }
+
+                // Execute the instrumented binary for shadow evaluation (no special env vars needed at runtime)
+                logger.info(`FPChecker: Executing ${outputBinaryRound} (shadow evaluation mode)`);
+                logger.info(`FPChecker: Working directory: ${workDir}`);
+
+                const execResultRound = await this.exec(outputBinaryRound, [], execOptions);
+                logger.info(`FPChecker: Rounding execution result - code: ${execResultRound.code}, stdout length: ${(execResultRound.stdout || '').length}, stderr length: ${(execResultRound.stderr || '').length}`);
+                if (execResultRound.stdout) logger.info(`FPChecker: Rounding stdout: ${execResultRound.stdout}`);
+                if (execResultRound.stderr) logger.info(`FPChecker: Rounding stderr: ${execResultRound.stderr}`);
+
+                // Read shadow evaluation logs
+                this.fpCheckerRoundingLogs = await this.readFPCheckerRoundingLogs(workDir);
+                logger.info(`FPChecker: Read ${this.fpCheckerRoundingLogs.length} rounding error entries`);
+                logger.info(`FPChecker: Rounding entries content: ${JSON.stringify(this.fpCheckerRoundingLogs)}`);
+            }
+
+            // ===== Combine Results =====
+
+            // Format error detection logs
+            let logOutput = '\n=== FPChecker Floating-Point Error Detection ===\n\n';
             if (this.fpCheckerLogs.length === 0) {
                 logOutput += 'No floating-point errors detected.\n';
             } else {
@@ -187,11 +334,37 @@ export class FPCheckerTool extends BaseTool {
                 }
             }
 
+            // Format shadow evaluation logs
+            logOutput += '\n=== FPChecker Shadow Evaluation (Rounding Errors) ===\n\n';
+            logger.info(`FPChecker: Formatting rounding logs, count = ${this.fpCheckerRoundingLogs.length}`);
+            if (this.fpCheckerRoundingLogs.length === 0) {
+                logOutput += 'No rounding errors tracked.\n';
+            } else {
+                for (const entry of this.fpCheckerRoundingLogs) {
+                    logger.info(`FPChecker: Processing rounding entry: ${JSON.stringify(entry)}`);
+                    const errors = this.formatRoundingErrors(entry);
+                    logger.info(`FPChecker: Got ${errors.length} formatted errors`);
+                    if (errors.length > 0) {
+                        logOutput += `${entry.file}:${entry.line}\n`;
+                        for (const error of errors) {
+                            logOutput += `  - ${error}\n`;
+                        }
+                    } else {
+                        logger.warn(`FPChecker: No formatted errors for entry at ${entry.file}:${entry.line}`);
+                    }
+                }
+            }
+            logger.info(`FPChecker: Final logOutput length: ${logOutput.length}`);
+
             // Combine compilation, execution output, and parsed logs
             const combinedResult: UnprocessedExecResult = {
-                ...execResult,
-                stdout: compileResult.stdout + (compileResult.stdout && execResult.stdout ? '\n' : '') + execResult.stdout + logOutput,
-                stderr: compileResult.stderr + (compileResult.stderr && execResult.stderr ? '\n' : '') + execResult.stderr,
+                ...execResultError,
+                stdout: debugOutput +
+                        (compileResultError.stdout || '') +
+                        (execResultError.stdout ? '\n' + execResultError.stdout : '') +
+                        logOutput,
+                stderr: (compileResultError.stderr || '') +
+                        (execResultError.stderr ? '\n' + execResultError.stderr : ''),
             };
 
             return this.convertResult(combinedResult, inputFilepath);
@@ -236,35 +409,59 @@ export class FPCheckerTool extends BaseTool {
 
         // Then, add tags for source code lines with errors (tooltips only, no text output)
         // Only add once to avoid duplicates from stderr/stdout both calling parseOutput
-        if (!this.tagsAdded && this.fpCheckerLogs.length > 0) {
+        if (!this.tagsAdded && (this.fpCheckerLogs.length > 0 || this.fpCheckerRoundingLogs.length > 0)) {
             this.tagsAdded = true;
 
             // Group by line number to avoid duplicates
-            const errorsByLine = new Map<number, {file: string; errors: string[]}>();
+            const errorsByLine = new Map<number, {file: string; errors: string[]; roundingErrors: string[]}>();
 
+            // Add error detection tags
             for (const entry of this.fpCheckerLogs) {
                 const errors = this.formatFPCheckerErrors(entry);
                 if (errors.length > 0) {
                     if (!errorsByLine.has(entry.line)) {
-                        errorsByLine.set(entry.line, {file: entry.file, errors: []});
+                        errorsByLine.set(entry.line, {file: entry.file, errors: [], roundingErrors: []});
                     }
                     errorsByLine.get(entry.line)!.errors.push(...errors);
                 }
             }
 
-            // Create one tag per line
-            for (const [lineNum, {file, errors}] of errorsByLine) {
-                const errorMessage = `FPChecker: ${errors.join(', ')}`;
-                result.push({
-                    text: '', // Empty text so it doesn't show in output
-                    tag: {
-                        line: lineNum,
-                        column: 0,
-                        text: errorMessage,
-                        severity: 2, // Warning level
-                        file: file,
-                    },
-                });
+            // Add rounding error tags
+            for (const entry of this.fpCheckerRoundingLogs) {
+                const errors = this.formatRoundingErrors(entry);
+                if (errors.length > 0) {
+                    if (!errorsByLine.has(entry.line)) {
+                        errorsByLine.set(entry.line, {file: entry.file, errors: [], roundingErrors: []});
+                    }
+                    errorsByLine.get(entry.line)!.roundingErrors.push(...errors);
+                }
+            }
+
+            // Create one tag per line combining both error types
+            for (const [lineNum, {file, errors, roundingErrors}] of errorsByLine) {
+                const allErrors: string[] = [];
+
+                if (errors.length > 0) {
+                    allErrors.push(`Error Detection: ${errors.join(', ')}`);
+                }
+
+                if (roundingErrors.length > 0) {
+                    allErrors.push(`Rounding: ${roundingErrors.join(', ')}`);
+                }
+
+                if (allErrors.length > 0) {
+                    const errorMessage = `FPChecker - ${allErrors.join(' | ')}`;
+                    result.push({
+                        text: '', // Empty text so it doesn't show in output
+                        tag: {
+                            line: lineNum,
+                            column: 0,
+                            text: errorMessage,
+                            severity: 2, // Warning level
+                            file: file,
+                        },
+                    });
+                }
             }
         }
 
